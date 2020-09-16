@@ -11,6 +11,7 @@ let firebaseApp = firebase.initializeApp({
   appId: "1:56794161319:web:a143a683552436b33dbb82"
 })
 
-let db = firebaseApp.firestore();
+const db = firebaseApp.firestore();
+const storage = firebaseApp.storage();
 
-export { db }
+export { db, storage }
