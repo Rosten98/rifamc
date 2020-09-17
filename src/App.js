@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { db, storage } from "./firebase";
+import imageCompression from 'browser-image-compression';
 
 function App() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [mail, setMail] = useState("");
-  const allInputs = {imgUrl: ''}
   const [imageAsFile, setImageAsFile] = useState('')
-  const [imageAsUrl, setImageAsUrl] = useState(allInputs)
+  const [imageAsUrl, setImageAsUrl] = useState('')
+  const [uploadState, setUploadState] = useState(0)
 
   const validateName = (event) => {
     setName(event.target.value);
@@ -24,37 +25,35 @@ function App() {
     console.log(mail);
   };
 
-  console.log(imageAsFile)
-  const handleImageAsFile = (e) => {
+  const handleImageAsFile = async (e) => {
     const image = e.target.files[0]
-    setImageAsFile(imageFile => (image))
+    const newImgName = phone + generateImageId()
+    const imageFile = new File([image], newImgName, {type: image.type})
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    }
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+      setImageAsFile(compressedFile)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
+  const generateImageId = () => {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if(imageAsFile === '' ) {
-      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
-    }
-
-    const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
-
-    uploadTask.on('state_changed', 
-    (snapShot) => {
-      //takes a snap shot of the process as it is happening
-      console.log(snapShot)
-    }, (err) => {
-      //catches the errors
-      console.log(err)
-    }, () => {
-      // gets the functions from storage refences the image storage in firebase by the children
-      // gets the download url then sets the image from firebase as the value for the imgUrl key:
-      storage.ref('images').child(imageAsFile.name).getDownloadURL()
-       .then(fireBaseUrl => {
-         setImageAsUrl(prevObject => ({...prevObject, imgUrl: fireBaseUrl}))
-       })
-    })
-    console.log(imageAsUrl)
 
     db.collection('contacts').add({
       name,
@@ -69,6 +68,32 @@ function App() {
       alert(error.message)  
     })
   }
+
+  useEffect(()=> {
+    if(imageAsFile === '' ) {
+      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
+    } else {
+      const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
+
+      uploadTask.on('state_changed', 
+      (snapShot) => {
+        //takes a snap shot of the process as it is happening
+        console.log("snapshot" + snapShot)
+      }, (err) => {
+        //catches the errors
+        console.log(err)
+      }, () => {
+        // gets the functions from storage refences the image storage in firebase by the children
+        // gets the download url then sets the image from firebase as the value for the imgUrl key:
+        storage.ref('images').child(imageAsFile.name).getDownloadURL()
+        .then(fireBaseUrl => {
+          setImageAsUrl(fireBaseUrl)
+        })
+      })
+    }
+
+    
+  }, [imageAsFile])
 
   return (
     <div>
@@ -110,6 +135,7 @@ function App() {
           <input type="file" onChange={handleImageAsFile}/>
         </label>
         <br />
+        <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png"></img>
         <button type="submit">Enviar</button>
       </form>
     </div>
