@@ -25,6 +25,17 @@ function App() {
     console.log(mail);
   };
 
+  const resetForm = () => {
+    setName("")
+    setMail("")
+    setPhone("")
+    setImageAsFile("")
+    setImageAsUrl("")
+    setUploadState(0)
+    const imageInput = document.getElementById('payImg')
+    imageInput.value = null
+  }
+
   const handleImageAsFile = async (e) => {
     const image = e.target.files[0]
     const newImgName = phone + generateImageId()
@@ -63,6 +74,7 @@ function App() {
     })
     .then(() => {
       alert("Data added successfully")
+      resetForm()
     })
     .catch((error) => {
       alert(error.message)  
@@ -76,9 +88,9 @@ function App() {
       const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
 
       uploadTask.on('state_changed', 
-      (snapShot) => {
-        //takes a snap shot of the process as it is happening
-        console.log("snapshot" + snapShot)
+      (snapshot) => {
+        let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        setUploadState(Math.round(percentage))
       }, (err) => {
         //catches the errors
         console.log(err)
@@ -135,7 +147,9 @@ function App() {
           <input type="file" onChange={handleImageAsFile}/>
         </label>
         <br />
-        <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png"></img>
+        
+        <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg"></img>
+        <p>{uploadState !== 0 && uploadState}</p>
         <button type="submit">Enviar</button>
       </form>
     </div>
