@@ -84,27 +84,27 @@ function App() {
   }
 
   useEffect(()=> {
-    // if(imageAsFile === '' ) {
-    //   console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
-    // } else {
-    //   const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
+    if(imageAsFile === '' ) {
+      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
+    } else {
+      const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
 
-    //   uploadTask.on('state_changed', 
-    //   (snapshot) => {
-    //     let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-    //     setUploadState(Math.round(percentage))
-    //   }, (err) => {
-    //     //catches the errors
-    //     console.log(err)
-    //   }, () => {
-    //     // gets the functions from storage refences the image storage in firebase by the children
-    //     // gets the download url then sets the image from firebase as the value for the imgUrl key:
-    //     storage.ref('images').child(imageAsFile.name).getDownloadURL()
-    //     .then(fireBaseUrl => {
-    //       setImageAsUrl(fireBaseUrl)
-    //     })
-    //   })
-    // }
+      uploadTask.on('state_changed', 
+      (snapshot) => {
+        let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        setUploadState(Math.round(percentage))
+      }, (err) => {
+        //catches the errors
+        console.log(err)
+      }, () => {
+        // gets the functions from storage refences the image storage in firebase by the children
+        // gets the download url then sets the image from firebase as the value for the imgUrl key:
+        storage.ref('images').child(imageAsFile.name).getDownloadURL()
+        .then(fireBaseUrl => {
+          setImageAsUrl(fireBaseUrl)
+        })
+      })
+    }
 
     
   }, [imageAsFile])
@@ -128,88 +128,93 @@ function App() {
 
   return (
     <div className="page">
-      <main className="container">
+      <main className="">
         <header>
-          <img src={require('./assets/logo.jpg')} width="100px"/>
+          <img src={require('./assets/logo.jpg')} width="100px" className="logo" alt=""/>
           <h1> Rifa navideña Miles Christi </h1>
         </header>
-        <section>
           <form onSubmit={handleSubmit}>
-            <label>
-              Nombre completo:
-              <br />
-              <input
-                placeholder="Nombre completo"
-                value={name}
-                onChange={(e) => validateName(e)}
-              />
-            </label>
-            <br />
-            <label>
-              Celular o fijo:
-              <br />
-              <input
-                placeholder="3320202020"
-                value={phone}
-                onChange={(e) => validatePhone(e)}
-              />
-            </label>
-            <br />
-            <label>
-              Correo electrónico:
-              <br />
-              <input
-                placeholder="nombre@mail.com"
-                value={mail}
-                onChange={(e) => validateMail(e)}
-              />
-            </label>
-            <br />
-            <label>Numeros disponibles:</label>
-            <ul>
-              {
-                  numbers.length > 0 && numbers.map((item,i) => {
-                    return (
-                      <li key={i}>{item.number}</li>
-                    )
-                  })
-              }
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-              <li>1</li>  
-            </ul>
-            <p>De los numeros disponibles, escribe tantos como hayas pagado separados por una coma.</p>
-            <label>
-              Elige tu número:
-              <br/>
-              <textarea placeholder="100, 101, 102"></textarea>
-            </label>
-            <br />
-            <label>
-              Sube la imagen de tu pago
-              <br/>
-              <input type="file" onChange={handleImageAsFile}/>
-            </label>
-            <br/>
-            <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg"></img>
-            <p>{uploadState !== 0 && uploadState}</p>
-            <button type="submit">Enviar</button>
+            <section>
+              <h3>Información básica</h3>
+              <div className="basic-info">
+                <label className="input-a">
+                  Nombre completo
+                  <br />
+                  <input
+                    placeholder="Nombre completo"
+                    value={name}
+                    onChange={(e) => validateName(e)}
+                  />
+                <br />
+                </label>
+                <label className="input-b">
+                  Celular o teléfono fijo
+                  <br />
+                  <input
+                    placeholder="3320202020"
+                    value={phone}
+                    onChange={(e) => validatePhone(e)}
+                  />
+                <br />
+                </label>
+                <label className="input-c">
+                  Correo electrónico
+                  <br />
+                  <input
+                    placeholder="nombre@mail.com"
+                    value={mail}
+                    onChange={(e) => validateMail(e)}
+                  />
+                <br />
+                </label>  
+              </div>
+              <hr/>
+              <h3>Información sobre el boleto</h3>
+              <div className="numbers-info">
+                <div>
+                  <label>
+                    Sube la foto de tu pago
+                    <input type="file" onChange={handleImageAsFile} id="inputImgUp"/>
+                  </label>
+                  <button onClick={() => document.getElementById('inputImgUp').click()} className="btnUp">
+                    <span>Subir foto</span>
+                    <i class="fas fa-upload"></i>
+                  </button>
+                  {
+                    uploadState !== 0 && <p className="progress">Subido {uploadState}%</p>
+                  }
+                  <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
+                </div> 
+                <div>
+                  <label>Números disponibles</label>
+                  <ul>
+                    {
+                        numbers.length > 0 && numbers.map((item,i) => {
+                          return (
+                            <li key={i}>{item.number}</li>
+                          )
+                        })
+                    }
+                    <li>1</li>  
+                  </ul>
+                  <p>De los números disponibles, elige tantos como hayas pagado (si pagaste 3 elige 3) y escribelos en el siguiente recuadro separados por una coma.</p>
+                  <label>
+                    Escribe tus números
+                    <br/>
+                    <textarea placeholder="100, 101, 102"></textarea>
+                  </label>
+                  <br />
+                </div> 
+              </div>
+            </section>
+            <footer>
+              <button type="submit">
+                <span>Enviar</span>
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </footer>
           </form>
-        </section>
       </main>
-      <footer>
-        <b>Redes sociales</b>
-      </footer>
     </div>
   );
 }
