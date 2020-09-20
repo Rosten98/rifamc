@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { db, storage } from "./firebase";
 import imageCompression from 'browser-image-compression';
-
+import './App.css'
 function App() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [mail, setMail] = useState("");
-  const [imageAsFile, setImageAsFile] = useState('')
-  const [imageAsUrl, setImageAsUrl] = useState('')
-  const [uploadState, setUploadState] = useState(0)
+  const [numbers, setNumbers] = useState([]);
+  const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const [imageAsFile, setImageAsFile] = useState('');
+  const [imageAsUrl, setImageAsUrl] = useState('');
+  const [uploadState, setUploadState] = useState(0);
 
   const validateName = (event) => {
     setName(event.target.value);
@@ -66,92 +68,148 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    db.collection('contacts').add({
-      name,
-      phone,
-      mail,
-      imageAsUrl
-    })
-    .then(() => {
-      alert("Data added successfully")
-      resetForm()
-    })
-    .catch((error) => {
-      alert(error.message)  
-    })
+    // db.collection('contacts').add({
+    //   name,
+    //   phone,
+    //   mail,
+    //   imageAsUrl
+    // })
+    // .then(() => {
+    //   alert("Data added successfully")
+    //   resetForm()
+    // })
+    // .catch((error) => {
+    //   alert(error.message)  
+    // })
   }
 
   useEffect(()=> {
-    if(imageAsFile === '' ) {
-      console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
-    } else {
-      const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
+    // if(imageAsFile === '' ) {
+    //   console.error(`not an image, the image file is a ${typeof(imageAsFile)}`)
+    // } else {
+    //   const uploadTask = storage.ref(`/images/${imageAsFile.name}`).put(imageAsFile)
 
-      uploadTask.on('state_changed', 
-      (snapshot) => {
-        let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        setUploadState(Math.round(percentage))
-      }, (err) => {
-        //catches the errors
-        console.log(err)
-      }, () => {
-        // gets the functions from storage refences the image storage in firebase by the children
-        // gets the download url then sets the image from firebase as the value for the imgUrl key:
-        storage.ref('images').child(imageAsFile.name).getDownloadURL()
-        .then(fireBaseUrl => {
-          setImageAsUrl(fireBaseUrl)
-        })
-      })
-    }
+    //   uploadTask.on('state_changed', 
+    //   (snapshot) => {
+    //     let percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+    //     setUploadState(Math.round(percentage))
+    //   }, (err) => {
+    //     //catches the errors
+    //     console.log(err)
+    //   }, () => {
+    //     // gets the functions from storage refences the image storage in firebase by the children
+    //     // gets the download url then sets the image from firebase as the value for the imgUrl key:
+    //     storage.ref('images').child(imageAsFile.name).getDownloadURL()
+    //     .then(fireBaseUrl => {
+    //       setImageAsUrl(fireBaseUrl)
+    //     })
+    //   })
+    // }
 
     
   }, [imageAsFile])
 
+  useEffect(()=> {
+    // db.collection('numbers').get()
+    //   .then((querySnapshot) => {
+    //     let docs = []
+    //     querySnapshot.forEach((doc) => {
+    //       console.log(doc.id, " => ", doc.data().number);
+    //       docs.push({id: doc.id, number: doc.data().number})
+    //     });
+    //     setNumbers(docs)
+    //   })
+    //   .catch(function(error) {
+    //       console.log("Error getting documents: ", error);
+    //   });
+  }, [])
+
+  // console.log(numbers)
+
   return (
-    <div>
-      <h1> Rifa navideña Miles Christi </h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Nombre completo:
-          <br />
-          <input
-            placeholder="Nombre completo"
-            value={name}
-            onChange={(e) => validateName(e)}
-          />
-        </label>
-        <br />
-        <label>
-          Celular o fijo:
-          <br />
-          <input
-            placeholder="3320202020"
-            value={phone}
-            onChange={(e) => validatePhone(e)}
-          />
-        </label>
-        <br />
-        <label>
-          Correo electrónico:
-          <br />
-          <input
-            placeholder="nombre@mail.com"
-            value={mail}
-            onChange={(e) => validateMail(e)}
-          />
-        </label>
-        <br />
-        <label>
-          Sube la imagen de tu pago
-          <br/>
-          <input type="file" onChange={handleImageAsFile}/>
-        </label>
-        <br />
-        
-        <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg"></img>
-        <p>{uploadState !== 0 && uploadState}</p>
-        <button type="submit">Enviar</button>
-      </form>
+    <div className="page">
+      <main className="container">
+        <header>
+          <img src={require('./assets/logo.jpg')} width="100px"/>
+          <h1> Rifa navideña Miles Christi </h1>
+        </header>
+        <section>
+          <form onSubmit={handleSubmit}>
+            <label>
+              Nombre completo:
+              <br />
+              <input
+                placeholder="Nombre completo"
+                value={name}
+                onChange={(e) => validateName(e)}
+              />
+            </label>
+            <br />
+            <label>
+              Celular o fijo:
+              <br />
+              <input
+                placeholder="3320202020"
+                value={phone}
+                onChange={(e) => validatePhone(e)}
+              />
+            </label>
+            <br />
+            <label>
+              Correo electrónico:
+              <br />
+              <input
+                placeholder="nombre@mail.com"
+                value={mail}
+                onChange={(e) => validateMail(e)}
+              />
+            </label>
+            <br />
+            <label>Numeros disponibles:</label>
+            <ul>
+              {
+                  numbers.length > 0 && numbers.map((item,i) => {
+                    return (
+                      <li key={i}>{item.number}</li>
+                    )
+                  })
+              }
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+              <li>1</li>  
+            </ul>
+            <p>De los numeros disponibles, escribe tantos como hayas pagado separados por una coma.</p>
+            <label>
+              Elige tu número:
+              <br/>
+              <textarea placeholder="100, 101, 102"></textarea>
+            </label>
+            <br />
+            <label>
+              Sube la imagen de tu pago
+              <br/>
+              <input type="file" onChange={handleImageAsFile}/>
+            </label>
+            <br/>
+            <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg"></img>
+            <p>{uploadState !== 0 && uploadState}</p>
+            <button type="submit">Enviar</button>
+          </form>
+        </section>
+      </main>
+      <footer>
+        <b>Redes sociales</b>
+      </footer>
     </div>
   );
 }
