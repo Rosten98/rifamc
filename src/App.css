@@ -55,6 +55,11 @@ main{
 main header {
   text-align: center;
   padding: 1em 2em;
+  display: grid;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
   /* margin-top: -100px; */
 }
 
@@ -64,8 +69,8 @@ main img.logo {
   /* top: -20px; */
   /* transform: translateX(-50%); */
   background-color: white;
-  box-shadow: 0px 0px 5px 1px rgba(36, 36, 36, .1);
-  border-radius: 100%;
+  /* box-shadow: 0px 0px 5px 1px rgba(36, 36, 36, .1); */
+  /* border-radius: 100%; */
   padding: .5em;
 }
 
@@ -210,9 +215,19 @@ footer {
   font-size: 8em;
   color: #bbb;
 }
+
+@media only screen and (min-width: 600px) {
+  main header {
+     flex-direction: row;
+  }
+}
  
  /* Medium devices (landscape tablets, 768px and up) */
  @media only screen and (min-width: 768px) {
+   main header {
+      flex-direction: row;
+   }
+
   .input-a {
     grid-area: col-one;
    }

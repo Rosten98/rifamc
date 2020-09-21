@@ -180,12 +180,13 @@ const App = () => {
     <div className="page">
       <main className="">
         <header>
-          <img src={require('./assets/logo.jpg')} width="100px" className="logo" alt=""/>
-          <h1> Rifa navideña Miles Christi </h1>
+          <img src={require('./assets/full-ogo.jpg')} width="100%" className="logo" alt=""/>
+          <img src={require('./assets/title.jpeg')} width="100%" className="logo" alt=""/>
+          {/* <h1> Rifa navideña Miles Christi </h1> */}
         </header>
           <form onSubmit={handleSubmit}>
             <section>
-              <h3>Información básica</h3>
+              <h3>Información personal</h3>
               <div className="basic-info">
                 <label className="input-a">
                   Nombre completo
