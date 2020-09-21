@@ -263,10 +263,18 @@ const App = () => {
                   {
                     uploadState !== 0 && <p className="progress">Subido {uploadState}%</p>
                   }
-                  <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
+                  {
+                    imageAsUrl ? 
+                      <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
+                    :
+                      <div className="img-placeholder">
+                        <i class="far fa-image"></i>
+                      </div>
+                  }
                 </div> 
                 <div>
-                  <label>Números disponibles</label>
+                  <p>De los números disponibles, elige tantos como hayas pagado (si pagaste 3 elige 3) y escribelos en el siguiente recuadro separados por una coma.</p>
+                  <label>Lista de números disponibles</label>
                   <ul>
                     {
                         numbers.length > 0 && numbers.map((item,i) => {
@@ -276,7 +284,6 @@ const App = () => {
                         })
                     }
                   </ul>
-                  <p>De los números disponibles, elige tantos como hayas pagado (si pagaste 3 elige 3) y escribelos en el siguiente recuadro separados por una coma.</p>
                   <label>
                     Escribe tus números
                     <br/>
