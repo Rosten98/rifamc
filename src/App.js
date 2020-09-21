@@ -5,16 +5,19 @@ import './App.css'
 import Error from "./components/Error";
 import Alert from "./components/Alert";
 const App = () => {
-  const [name, setName] = useState("");
-  const [isNameValid, setIsNameValid] = useState(false)
+  const [firstName, setFirstName] = useState("");
+  const [isFirstNameValid, setIsFirstNameValid] = useState(false)
+  const [lastName, setLastName] = useState("");
+  const [isLastNameValid, setIsLastNameValid] = useState(false)
   const [phone, setPhone] = useState("");
   const [isPhoneValid, setIsPhoneValid] = useState(false)
+  const [localPhone, setLocalPhone] = useState("");
+  const [isLocalPhoneValid, setIsLocalPhoneValid] = useState(false)
   const [mail, setMail] = useState("");
   const [isMailValid, setIsMailValid] = useState(false)
-  const [group, setGroup] = useState("");
+  const [group, setGroup] = useState("Ninguno");
   const [numbers, setNumbers] = useState([]);
   const [selectedNumbers, setSelectedNumbers] = useState([]);
-  const [isNumberValid, setIsNumberValid] = useState(false)
   const [imageAsFile, setImageAsFile] = useState('');
   const [imageAsUrl, setImageAsUrl] = useState('');
   // const [isUrl, setIsUrl] = useState(false)
@@ -22,12 +25,34 @@ const App = () => {
 
   const validateName = (event) => {
     const inputName = event.target.value
-    const re = /^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/
-    setName(inputName);
+    const re = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/
+    setFirstName(inputName);
     if(re.test(inputName)){
-      setIsNameValid(true)
+      setIsFirstNameValid(true)
     } else {
-      setIsNameValid(false)
+      setIsFirstNameValid(false)
+    }
+  };
+
+  const validateLastName = (event) => {
+    const inputName = event.target.value
+    const re = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/
+    setLastName(inputName);
+    if(re.test(inputName)){
+      setIsLastNameValid(true)
+    } else {
+      setIsLastNameValid(false)
+    }
+  }
+
+  const validateLocalPhone = (event) => {
+    const inputPhone = event.target.value
+    const re = /^\d{10}$/
+    setLocalPhone(inputPhone)
+    if(re.test(inputPhone)){
+      setIsLocalPhoneValid(true)
+    } else {
+      setIsLocalPhoneValid(false)
     }
   };
 
@@ -54,7 +79,8 @@ const App = () => {
   };
 
   const resetForm = () => {
-    setName("")
+    setFirstName("")
+    setLastName("")
     setPhone("")
     setMail("")
     setGroup("")
@@ -87,22 +113,21 @@ const App = () => {
       console.log(error);
     }
   }
-  
-  const handleNumbers = (e) => {
-    console.log(e.target.value)
-    const numbersSelected = e.target.value.replace(/\s/g, '').split(',')
-    let aSelectedNumbers = []
-    numbersSelected.forEach( number => {
-      if(isNaN(number) || number === ""){
-        setIsNumberValid(false)
-      } else {
-        setIsNumberValid(true)
-      }
-      aSelectedNumbers.push(number)
-    })
-    setSelectedNumbers(aSelectedNumbers)
-    console.log(numbersSelected)
-    console.log("Is valid number", isNumberValid)
+
+  const handleCheckboxes = (event) => {
+    const isNumberSelected = event.target.checked
+    const numberSel = event.target.value
+
+    if(isNumberSelected){
+      setSelectedNumbers(prevState => 
+        [
+          ...prevState,
+          numberSel
+        ]
+      )
+    } else {
+      setSelectedNumbers(prevState => prevState.filter(number => number !== numberSel))
+    }
   }
   
   const generateImageId = () => {
@@ -114,23 +139,34 @@ const App = () => {
   
   const handleSubmit = (event) => {
     event.preventDefault()
-
-    db.collection('contacts').add({
-      name,
+    console.log({
+      firstName,
+      lastName,
       phone,
+      localPhone,
       mail,
       imageAsUrl,
       date: new Date().toLocaleString(),
       group,
       selectedNumbers,
     })
-    .then(() => {
-      alert("Data added successfully")
-      resetForm()
-    })
-    .catch((error) => {
-      alert(error.message)  
-    })
+    // db.collection('contacts').add({
+    //   firstName,
+    //   lastName,
+    //   phone,
+    //   mail,
+    //   imageAsUrl,
+    //   date: new Date().toLocaleString(),
+    //   group,
+    //   selectedNumbers,
+    // })
+    // .then(() => {
+    //   alert("Data added successfully")
+    //   resetForm()
+    // })
+    // .catch((error) => {
+    //   alert(error.message)  
+    // })
   }
 
   useEffect(()=> {
@@ -189,22 +225,37 @@ const App = () => {
               <h3>Información personal</h3>
               <div className="basic-info">
                 <label className="input-a">
-                  Nombre completo
+                  Nombres
                   <br />
                   <input
-                    placeholder="Nombre completo"
-                    value={name}
+                    placeholder="Nombres"
+                    value={firstName}
                     onChange={(e) => validateName(e)}
                   />
                   {
-                      name === "" ? 
+                      firstName === "" ? 
                       <Alert alertMessage="Campo obligatorio"/> :
-                      !isNameValid && <Error errorMesssage="El nombre no es correcto"/>
+                      !isFirstNameValid && <Error errorMesssage="El nombre no es correcto"/>
+                  }
+                <br />
+                </label>
+                <label className="input-aa">
+                  Apellidos
+                  <br />
+                  <input
+                    placeholder="Apellidos"
+                    value={lastName}
+                    onChange={(e) => validateLastName(e)}
+                  />
+                  {
+                      lastName === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isLastNameValid && <Error errorMesssage="El apellido no es correcto"/>
                   }
                 <br />
                 </label>
                 <label className="input-b">
-                  Celular o teléfono fijo
+                  Celular (a 10 numeros)
                   <br />
                   <input
                     placeholder="3320202020"
@@ -215,6 +266,21 @@ const App = () => {
                       phone === "" ? 
                       <Alert alertMessage="Campo obligatorio"/> :
                       !isPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
+                  }
+                <br />
+                </label>
+                <label className="input-bb">
+                  Teléfono fijo (a 10 numeros)
+                  <br />
+                  <input
+                    placeholder="3320202020"
+                    value={localPhone}
+                    onChange={(e) => validateLocalPhone(e)}
+                  />
+                  {
+                      localPhone === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isLocalPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
                   }
                 <br />
                 </label>
@@ -234,13 +300,35 @@ const App = () => {
                 <br />
                 </label> 
                 <label className="input-d">
-                  Grupo al que perteneces (si no perteneces a ninguno, dejalo en blanco)
+                  Grupo al que perteneces
                   <br />
-                  <input
+                  <select
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
+                      >
+                    <option value="Niguno">Ninguno </option>
+                    <option value="Jóvenes con Orgullo Católico ">Jóvenes con Orgullo Católico </option>
+                    <option value="Tota Pulchra Guadalupe">Tota Pulchra Guadalupe</option>
+                    <option value="Formación mujeres">Formación mujeres</option>
+                    <option value="Formación para jóvenes">Formación para jóvenes</option>
+                    <option value="Formación hombres">Formación hombres</option>
+                    <option value="Grupo de acólitos San Miguel Arcángel">Grupo de acólitos San Miguel Arcángel</option>
+                    <option value="Ponencias católicas">Ponencias católicas Jóvenes</option>
+                    <option value="Ponencias católicas">Ponencias católicas Matrimonios</option>
+                    <option value="Los Tesoros de la Fe">Los Tesoros de la Fe</option>
+                    <option value="El Faro">El Faro</option>
+                    <option value="Coro Benedicto XVI">Coro Benedicto XVI</option>
+                    <option value="Pulchritas de María">Pulchritas de María</option>
+                    <option value="Grupos de Perseverancia ">Grupos de Perseverancia </option>
+                    <option value="Ejercicios Espirituales Ignacianos">Ejercicios Espirituales Ignacianos</option>
+                    <option value="Café post Ejercicios">Café post Ejercicios</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                  {/* <input
                     placeholder="P.e. JUCOC, Pulchritas, Formación para mujeres, etc"
                     value={group}
                     onChange={(e) => setGroup(e.target.value)}
-                  />
+                  /> */}
                 <br />
                 </label>  
               </div>
@@ -269,23 +357,32 @@ const App = () => {
                       <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
                     :
                       <div className="img-placeholder">
-                        <i class="far fa-image"></i>
+                        <i className="far fa-image"></i>
                       </div>
                   }
                 </div> 
                 <div>
-                  <p>De los números disponibles, elige tantos como hayas pagado (si pagaste 3 elige 3) y escribelos en el siguiente recuadro separados por una coma.</p>
+                  <p>De los números disponibles, elige tantos como hayas pagado (Ejemplo: si pagaste 3 elige 3)</p>
                   <label>Lista de números disponibles</label>
                   <ul>
                     {
                         numbers.length > 0 && numbers.map((item,i) => {
                           return (
-                            <li key={i}>{item.number}</li>
+                            <li key={i}>
+                              <input type="checkbox" onChange={(e) => handleCheckboxes(e)} value={item.number}/>
+                              {item.number}
+                            </li>
                           )
                         })
                     }
                   </ul>
                   <label>
+                  {
+                    selectedNumbers.length === 0 &&
+                    <Alert alertMessage="Campo obligatorio"/> 
+                  }
+                  </label>
+                  {/* <label>
                     Escribe tus números
                     <br/>
                     <textarea onChange={handleNumbers} placeholder="100, 101, 102" id="selNumbers"></textarea>
@@ -294,7 +391,7 @@ const App = () => {
                       <Alert alertMessage="Campo obligatorio"/> :
                       !isNumberValid && <Error errorMesssage="Los numeros no están correctamente escritos, valide los siguientes datos: números separados por coma, números sin repetir"/>
                     }
-                  </label>
+                  </label> */}
                   <br />
                 </div> 
               </div>
