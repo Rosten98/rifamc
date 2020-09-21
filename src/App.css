@@ -34,7 +34,6 @@ i {
   /* clip-path: polygon(0 0, 0 56%, 100% 0); */
   margin: 0;
   padding: 1em;
-  padding-bottom: 0;
   background: rgb(34,116,165);
   background: linear-gradient(170deg, rgba(34,116,165,1) 30%, rgba(11,100,152,0) 30%);
 }
@@ -86,7 +85,7 @@ ul {
   margin: 0;
   padding: 0;
   background-color: white;
-  height: 80px;
+  height: 160px;
   overflow:hidden; overflow-y:scroll;
   text-align: center;
   list-style-type: none;
@@ -161,8 +160,7 @@ button:hover {
 }
 
 .btnUp {
-  margin: 0;
-  margin-bottom: 5px;
+  margin: 10px 0;
 }
 
 footer {
@@ -173,11 +171,29 @@ footer {
   margin: 0;
 }
 
- /* Extra small devices (phones, 600px and down) */
- @media only screen and (max-width: 600px) {}
+.error-card {
+  border-radius: 2px;
+  background-color: #fbdbdb;
+}
 
- /* Small devices (portrait tablets and large phones, 600px and up) */
- @media only screen and (min-width: 600px) {}
+.error-message {
+  margin: 0;
+  padding: 0 1em;
+  color:#710000;
+  font-weight: bold;
+}
+
+.alert-card {
+  border-radius: 2px;
+  background-color: rgba(255, 237, 90, 0.5);
+}
+
+.alert-message {
+  margin: 0;
+  padding: 0 1em;
+  color:rgb(134, 119, 0);
+  font-weight: bold;
+}
  
  /* Medium devices (landscape tablets, 768px and up) */
  @media only screen and (min-width: 768px) {
@@ -193,15 +209,19 @@ footer {
     grid-area: col-three;
    }
 
+   .input-d {
+    grid-area: col-four;
+   }
+
    .basic-info {
      display: grid;
      grid-template-areas: 
         "col-one col-two"
-        "col-three col-three"
+        "col-three col-four"
      ;
    }
 
-   .basic-info label:nth-child(1) {
+   .basic-info label:nth-child(odd) {
      margin-right: 1em;
    }
 
@@ -213,21 +233,4 @@ footer {
    .numbers-info div:nth-child(odd) {
      margin-right: 1em;
    }
- }
- 
- /* Large devices (laptops/desktops, 992px and up) */
- @media only screen and (min-width: 992px) {
-  .basic-info {
-    grid-template-areas: 
-       "col-one col-two col-three"
-    ;
-  }
-  
-  .basic-info label:nth-child(1) {
-    margin-right: 0;
-  }
-
-  .basic-info label:nth-child(2) {
-    margin: 0 1em;
-  }
  }

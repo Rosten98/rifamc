@@ -2,40 +2,70 @@ import React, { useEffect, useState } from "react";
 import { db, storage } from "./firebase";
 import imageCompression from 'browser-image-compression';
 import './App.css'
-function App() {
+import Error from "./components/Error";
+import Alert from "./components/Alert";
+const App = () => {
   const [name, setName] = useState("");
+  const [isNameValid, setIsNameValid] = useState(false)
   const [phone, setPhone] = useState("");
+  const [isPhoneValid, setIsPhoneValid] = useState(false)
   const [mail, setMail] = useState("");
+  const [isMailValid, setIsMailValid] = useState(false)
+  const [group, setGroup] = useState("");
   const [numbers, setNumbers] = useState([]);
   const [selectedNumbers, setSelectedNumbers] = useState([]);
+  const [isNumberValid, setIsNumberValid] = useState(false)
   const [imageAsFile, setImageAsFile] = useState('');
   const [imageAsUrl, setImageAsUrl] = useState('');
+  // const [isUrl, setIsUrl] = useState(false)
   const [uploadState, setUploadState] = useState(0);
 
   const validateName = (event) => {
-    setName(event.target.value);
-    console.log(name);
+    const inputName = event.target.value
+    const re = /^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/
+    setName(inputName);
+    if(re.test(inputName)){
+      setIsNameValid(true)
+    } else {
+      setIsNameValid(false)
+    }
   };
 
   const validatePhone = (event) => {
-    setPhone(event.target.value);
-    console.log(phone);
+    const inputPhone = event.target.value
+    const re = /^\d{10}$/
+    setPhone(inputPhone)
+    if(re.test(inputPhone)){
+      setIsPhoneValid(true)
+    } else {
+      setIsPhoneValid(false)
+    }
   };
 
   const validateMail = (event) => {
-    setMail(event.target.value);
-    console.log(mail);
+    const inputMail = event.target.value
+    const re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    setMail(inputMail);
+    if(re.test(inputMail.toLowerCase())){
+      setIsMailValid(true)
+    } else {
+      setIsMailValid(false)
+    }
   };
 
   const resetForm = () => {
     setName("")
-    setMail("")
     setPhone("")
+    setMail("")
+    setGroup("")
+    setSelectedNumbers([])
     setImageAsFile("")
     setImageAsUrl("")
     setUploadState(0)
     const imageInput = document.getElementById('payImg')
     imageInput.value = null
+    const selNumbers = document.getElementById('selNumbers')
+    selNumbers.value = null
   }
 
   const handleImageAsFile = async (e) => {
@@ -57,30 +87,50 @@ function App() {
       console.log(error);
     }
   }
-
+  
+  const handleNumbers = (e) => {
+    console.log(e.target.value)
+    const numbersSelected = e.target.value.replace(/\s/g, '').split(',')
+    let aSelectedNumbers = []
+    numbersSelected.forEach( number => {
+      if(isNaN(number) || number === ""){
+        setIsNumberValid(false)
+      } else {
+        setIsNumberValid(true)
+      }
+      aSelectedNumbers.push(number)
+    })
+    setSelectedNumbers(aSelectedNumbers)
+    console.log(numbersSelected)
+    console.log("Is valid number", isNumberValid)
+  }
+  
   const generateImageId = () => {
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
     // after the decimal.
     return '_' + Math.random().toString(36).substr(2, 9);
   };
-
+  
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    // db.collection('contacts').add({
-    //   name,
-    //   phone,
-    //   mail,
-    //   imageAsUrl
-    // })
-    // .then(() => {
-    //   alert("Data added successfully")
-    //   resetForm()
-    // })
-    // .catch((error) => {
-    //   alert(error.message)  
-    // })
+    db.collection('contacts').add({
+      name,
+      phone,
+      mail,
+      imageAsUrl,
+      date: new Date().toLocaleString(),
+      group,
+      selectedNumbers,
+    })
+    .then(() => {
+      alert("Data added successfully")
+      resetForm()
+    })
+    .catch((error) => {
+      alert(error.message)  
+    })
   }
 
   useEffect(()=> {
@@ -110,23 +160,23 @@ function App() {
   }, [imageAsFile])
 
   useEffect(()=> {
-    // db.collection('numbers').get()
-    //   .then((querySnapshot) => {
-    //     let docs = []
-    //     querySnapshot.forEach((doc) => {
-    //       console.log(doc.id, " => ", doc.data().number);
-    //       docs.push({id: doc.id, number: doc.data().number})
-    //     });
-    //     setNumbers(docs)
-    //   })
-    //   .catch(function(error) {
-    //       console.log("Error getting documents: ", error);
-    //   });
-  }, [])
+    db.collection('numbers').orderBy("number", "asc").get()
+      .then((querySnapshot) => {
+        let docs = []
+        querySnapshot.forEach((doc) => {
+          console.log(doc.id, " => ", doc.data().number);
+          docs.push({id: doc.id, number: doc.data().number})
+        });
+        setNumbers(docs)
+      })
+      .catch(function(error) {
+          console.log("Error getting documents: ", error);
+      });
+    }, [])
 
-  // console.log(numbers)
-
-  return (
+    // console.log(numbers)
+    
+    return (
     <div className="page">
       <main className="">
         <header>
@@ -145,6 +195,11 @@ function App() {
                     value={name}
                     onChange={(e) => validateName(e)}
                   />
+                  {
+                      name === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isNameValid && <Error errorMesssage="El nombre no es correcto"/>
+                  }
                 <br />
                 </label>
                 <label className="input-b">
@@ -155,6 +210,11 @@ function App() {
                     value={phone}
                     onChange={(e) => validatePhone(e)}
                   />
+                  {
+                      phone === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
+                  }
                 <br />
                 </label>
                 <label className="input-c">
@@ -164,6 +224,21 @@ function App() {
                     placeholder="nombre@mail.com"
                     value={mail}
                     onChange={(e) => validateMail(e)}
+                  />
+                  {
+                      mail === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isMailValid && <Error errorMesssage="El mail no es correcto"/>
+                  }
+                <br />
+                </label> 
+                <label className="input-d">
+                  Grupo al que perteneces (si no perteneces a ninguno, dejalo en blanco)
+                  <br />
+                  <input
+                    placeholder="P.e. JUCOC, Pulchritas, Formación para mujeres, etc"
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
                   />
                 <br />
                 </label>  
@@ -175,10 +250,15 @@ function App() {
                   <label>
                     Sube la foto de tu pago
                     <input type="file" onChange={handleImageAsFile} id="inputImgUp"/>
+                    {
+                      imageAsUrl === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      null
+                    }
                   </label>
-                  <button onClick={() => document.getElementById('inputImgUp').click()} className="btnUp">
+                  <button type="button" onClick={() => document.getElementById('inputImgUp').click()} className="btnUp">
                     <span>Subir foto</span>
-                    <i class="fas fa-upload"></i>
+                    <i className="fas fa-upload"></i>
                   </button>
                   {
                     uploadState !== 0 && <p className="progress">Subido {uploadState}%</p>
@@ -195,13 +275,17 @@ function App() {
                           )
                         })
                     }
-                    <li>1</li>  
                   </ul>
                   <p>De los números disponibles, elige tantos como hayas pagado (si pagaste 3 elige 3) y escribelos en el siguiente recuadro separados por una coma.</p>
                   <label>
                     Escribe tus números
                     <br/>
-                    <textarea placeholder="100, 101, 102"></textarea>
+                    <textarea onChange={handleNumbers} placeholder="100, 101, 102" id="selNumbers"></textarea>
+                    {
+                      selectedNumbers.length === 0 ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isNumberValid && <Error errorMesssage="Los numeros no están correctamente escritos, valide los siguientes datos: números separados por coma, números sin repetir"/>
+                    }
                   </label>
                   <br />
                 </div> 
@@ -210,7 +294,7 @@ function App() {
             <footer>
               <button type="submit">
                 <span>Enviar</span>
-                <i class="fas fa-paper-plane"></i>
+                <i className="fas fa-paper-plane"></i>
               </button>
             </footer>
           </form>
