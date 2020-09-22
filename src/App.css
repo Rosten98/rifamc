@@ -95,10 +95,14 @@ ul {
   text-align: center;
   list-style-type: none;
   box-shadow: 0px 0px 5px 0px rgba(36, 36, 36, .1);
+  display: grid;
+  place-content: center;
 }
 
 li {
-  display: inline;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 label {
