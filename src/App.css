@@ -232,7 +232,7 @@ footer {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 300px;
+  height: 400px;
   background-color: #eee;
   border-radius: 5px;
 }
@@ -258,8 +258,16 @@ footer {
     grid-area: col-one;
    }
 
+   .input-aa {
+    grid-area: col-one-a;
+   }
+
    .input-b {
     grid-area: col-two;
+   }
+
+   .input-bb {
+    grid-area: col-two-b;
    }
 
    .input-c {
@@ -273,13 +281,13 @@ footer {
    .basic-info {
      display: grid;
      grid-template-areas: 
-        "col-one col-one col-two"
-        "col-three col-three col-four"
+        "col-one col-one-a col-two"
+        "col-two-b col-three col-four"
      ;
    }
 
-   .basic-info label:nth-child(odd) {
-     margin-right: 1em;
+   .basic-info label:nth-child(2),  .basic-info label:nth-child(5){
+     margin: 0 1em;
    }
 
    .numbers-info {

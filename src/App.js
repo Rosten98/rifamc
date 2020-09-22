@@ -22,6 +22,11 @@ const App = () => {
   const [imageAsUrl, setImageAsUrl] = useState('');
   // const [isUrl, setIsUrl] = useState(false)
   const [uploadState, setUploadState] = useState(0);
+  const [paymentType, setPaymentType] = useState("Oxxo")
+  const [ticketNumber, setTicketNumber] = useState("")
+  const [isTicketValid, setIsTicketValid] = useState(false)
+  const [payValue, setPayValue] = useState("")
+  const [isPayValid, setIsPayValid] = useState(false)
 
   const validateName = (event) => {
     const inputName = event.target.value
@@ -78,7 +83,33 @@ const App = () => {
     }
   };
 
+  const validateTicketnumber = (event) => {
+    const inputTicket = event.target.value
+    const re = /^\d+$/
+    setTicketNumber(inputTicket)
+    if(re.test(inputTicket)){
+      setIsTicketValid(true)
+    } else {
+      setIsTicketValid(false)
+    }    
+  }
+
+  const validatePayValue = (event) => {
+    const inputTicket = event.target.value
+    const re = /^\d+(\.\d+)?$/
+    setPayValue(inputTicket)
+    if(re.test(inputTicket)){
+      setIsPayValid(true)
+    } else {
+      setIsPayValid(false)
+    }    
+  }
+
   const resetForm = () => {
+    if(imageAsUrl !== ''){
+      const imageInput = document.getElementById('payImg')
+      imageInput.value = null
+    }
     setFirstName("")
     setLastName("")
     setPhone("")
@@ -88,10 +119,6 @@ const App = () => {
     setImageAsFile("")
     setImageAsUrl("")
     setUploadState(0)
-    const imageInput = document.getElementById('payImg')
-    imageInput.value = null
-    const selNumbers = document.getElementById('selNumbers')
-    selNumbers.value = null
   }
 
   const handleImageAsFile = async (e) => {
@@ -149,7 +176,11 @@ const App = () => {
       date: new Date().toLocaleString(),
       group,
       selectedNumbers,
+      paymentType,
+      ticketNumber,
+      payValue
     })
+    resetForm()
     // db.collection('contacts').add({
     //   firstName,
     //   lastName,
@@ -220,189 +251,220 @@ const App = () => {
           <img src={require('./assets/title.jpeg')} width="100%" className="logo" alt=""/>
           {/* <h1> Rifa navideña Miles Christi </h1> */}
         </header>
-          <form onSubmit={handleSubmit}>
-            <section>
-              <h3>Información personal</h3>
-              <div className="basic-info">
-                <label className="input-a">
-                  Nombres
-                  <br />
-                  <input
-                    placeholder="Nombres"
-                    value={firstName}
-                    onChange={(e) => validateName(e)}
-                  />
-                  {
-                      firstName === "" ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      !isFirstNameValid && <Error errorMesssage="El nombre no es correcto"/>
-                  }
+        <form onSubmit={handleSubmit}>
+          <section>
+            <h3>Información personal</h3>
+            <div className="basic-info">
+              <label className="input-a">
+                Nombres
                 <br />
-                </label>
-                <label className="input-aa">
-                  Apellidos
-                  <br />
-                  <input
-                    placeholder="Apellidos"
-                    value={lastName}
-                    onChange={(e) => validateLastName(e)}
-                  />
-                  {
-                      lastName === "" ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      !isLastNameValid && <Error errorMesssage="El apellido no es correcto"/>
-                  }
+                <input
+                  placeholder="Nombres"
+                  value={firstName}
+                  onChange={(e) => validateName(e)}
+                />
+                {
+                    firstName === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    !isFirstNameValid && <Error errorMesssage="El nombre no es correcto"/>
+                }
+              <br />
+              </label>
+              <label className="input-aa">
+                Apellidos
                 <br />
-                </label>
-                <label className="input-b">
-                  Celular (a 10 numeros)
-                  <br />
-                  <input
-                    placeholder="3320202020"
-                    value={phone}
-                    onChange={(e) => validatePhone(e)}
-                  />
-                  {
-                      phone === "" ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      !isPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
-                  }
+                <input
+                  placeholder="Apellidos"
+                  value={lastName}
+                  onChange={(e) => validateLastName(e)}
+                />
+                {
+                    lastName === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    !isLastNameValid && <Error errorMesssage="El apellido no es correcto"/>
+                }
+              <br />
+              </label>
+              <label className="input-b">
+                Celular (a 10 numeros)
                 <br />
-                </label>
-                <label className="input-bb">
-                  Teléfono fijo (a 10 numeros)
-                  <br />
-                  <input
-                    placeholder="3320202020"
-                    value={localPhone}
-                    onChange={(e) => validateLocalPhone(e)}
-                  />
-                  {
-                      localPhone === "" ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      !isLocalPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
-                  }
+                <input
+                  placeholder="3320202020"
+                  value={phone}
+                  onChange={(e) => validatePhone(e)}
+                />
+                {
+                    phone === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    !isPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
+                }
+              <br />
+              </label>
+              <label className="input-bb">
+                Teléfono fijo (a 10 numeros)
                 <br />
+                <input
+                  placeholder="3320202020"
+                  value={localPhone}
+                  onChange={(e) => validateLocalPhone(e)}
+                />
+                {
+                    localPhone === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    !isLocalPhoneValid && <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales."/>
+                }
+              <br />
+              </label>
+              <label className="input-c">
+                Correo electrónico
+                <br />
+                <input
+                  placeholder="nombre@mail.com"
+                  value={mail}
+                  onChange={(e) => validateMail(e)}
+                />
+                {
+                    mail === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    !isMailValid && <Error errorMesssage="El mail no es correcto"/>
+                }
+              <br />
+              </label> 
+              <label className="input-d">
+                Grupo al que perteneces
+                <br />
+                <select
+                  value={group}
+                  onChange={(e) => setGroup(e.target.value)}
+                    >
+                  <option value="Niguno">Ninguno </option>
+                  <option value="Jóvenes con Orgullo Católico ">Jóvenes con Orgullo Católico </option>
+                  <option value="Tota Pulchra Guadalupe">Tota Pulchra Guadalupe</option>
+                  <option value="Formación mujeres">Formación mujeres</option>
+                  <option value="Formación para jóvenes">Formación para jóvenes</option>
+                  <option value="Formación hombres">Formación hombres</option>
+                  <option value="Grupo de acólitos San Miguel Arcángel">Grupo de acólitos San Miguel Arcángel</option>
+                  <option value="Ponencias católicas">Ponencias católicas Jóvenes</option>
+                  <option value="Ponencias católicas">Ponencias católicas Matrimonios</option>
+                  <option value="Los Tesoros de la Fe">Los Tesoros de la Fe</option>
+                  <option value="El Faro">El Faro</option>
+                  <option value="Coro Benedicto XVI">Coro Benedicto XVI</option>
+                  <option value="Pulchritas de María">Pulchritas de María</option>
+                  <option value="Grupos de Perseverancia ">Grupos de Perseverancia </option>
+                  <option value="Ejercicios Espirituales Ignacianos">Ejercicios Espirituales Ignacianos</option>
+                  <option value="Café post Ejercicios">Café post Ejercicios</option>
+                  <option value="Otro">Otro</option>
+                </select>
+                {/* <input
+                  placeholder="P.e. JUCOC, Pulchritas, Formación para mujeres, etc"
+                  value={group}
+                  onChange={(e) => setGroup(e.target.value)}
+                /> */}
+              <br />
+              </label>  
+            </div>
+            <hr/>
+            <h3>Información sobre el boleto</h3>
+            <div className="numbers-info">
+              <div>
+                <label>
+                  Sube la foto de tu pago
+                  <input type="file" onChange={handleImageAsFile} id="inputImgUp"/>
+                  {
+                    imageAsUrl === "" ? 
+                    <Alert alertMessage="Campo obligatorio"/> :
+                    null
+                  }
                 </label>
-                <label className="input-c">
-                  Correo electrónico
+                <button type="button" onClick={() => document.getElementById('inputImgUp').click()} className="btnUp">
+                  <span>Subir foto</span>
+                  <i className="fas fa-upload"></i>
+                </button>
+                {
+                  uploadState !== 0 && <p className="progress">Subido {uploadState}%</p>
+                }
+                {
+                  imageAsUrl ? 
+                    <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
+                  :
+                    <div className="img-placeholder">
+                      <i className="far fa-image"></i>
+                    </div>
+                }
+              </div> 
+              <div>
+                <label>
+                  Pago hecho en
+                  <select
+                  value={paymentType}
+                  onChange={(e) => setPaymentType(e.target.value)}
+                    >
+                    <option value="Oxxo">Oxxo</option>
+                    <option value="Transferencia bancaria">Transferencia bancaria</option>
+                  </select>
+                <br/>
+                </label>
+                <label>
+                  Número de comprobante
                   <br />
                   <input
-                    placeholder="nombre@mail.com"
-                    value={mail}
-                    onChange={(e) => validateMail(e)}
+                    placeholder="101010101010"
+                    value={ticketNumber}
+                    onChange={(e) => validateTicketnumber(e)}
                   />
                   {
-                      mail === "" ? 
+                      ticketNumber === "" ? 
                       <Alert alertMessage="Campo obligatorio"/> :
-                      !isMailValid && <Error errorMesssage="El mail no es correcto"/>
+                      !isTicketValid && <Error errorMesssage="El ticket no es correcto"/>
                   }
                 <br />
                 </label> 
-                <label className="input-d">
-                  Grupo al que perteneces
+                <label>
+                  Cantidad depositada (en pesos MXN)
                   <br />
-                  <select
-                    value={group}
-                    onChange={(e) => setGroup(e.target.value)}
-                      >
-                    <option value="Niguno">Ninguno </option>
-                    <option value="Jóvenes con Orgullo Católico ">Jóvenes con Orgullo Católico </option>
-                    <option value="Tota Pulchra Guadalupe">Tota Pulchra Guadalupe</option>
-                    <option value="Formación mujeres">Formación mujeres</option>
-                    <option value="Formación para jóvenes">Formación para jóvenes</option>
-                    <option value="Formación hombres">Formación hombres</option>
-                    <option value="Grupo de acólitos San Miguel Arcángel">Grupo de acólitos San Miguel Arcángel</option>
-                    <option value="Ponencias católicas">Ponencias católicas Jóvenes</option>
-                    <option value="Ponencias católicas">Ponencias católicas Matrimonios</option>
-                    <option value="Los Tesoros de la Fe">Los Tesoros de la Fe</option>
-                    <option value="El Faro">El Faro</option>
-                    <option value="Coro Benedicto XVI">Coro Benedicto XVI</option>
-                    <option value="Pulchritas de María">Pulchritas de María</option>
-                    <option value="Grupos de Perseverancia ">Grupos de Perseverancia </option>
-                    <option value="Ejercicios Espirituales Ignacianos">Ejercicios Espirituales Ignacianos</option>
-                    <option value="Café post Ejercicios">Café post Ejercicios</option>
-                    <option value="Otro">Otro</option>
-                  </select>
-                  {/* <input
-                    placeholder="P.e. JUCOC, Pulchritas, Formación para mujeres, etc"
-                    value={group}
-                    onChange={(e) => setGroup(e.target.value)}
-                  /> */}
+                  <input
+                    placeholder="2000"
+                    value={payValue}
+                    onChange={(e) => validatePayValue(e)}
+                  />
+                  {
+                      payValue === "" ? 
+                      <Alert alertMessage="Campo obligatorio"/> :
+                      !isPayValid && <Error errorMesssage="El número no es correcto"/>
+                  }
                 <br />
-                </label>  
-              </div>
-              <hr/>
-              <h3>Información sobre el boleto</h3>
-              <div className="numbers-info">
-                <div>
-                  <label>
-                    Sube la foto de tu pago
-                    <input type="file" onChange={handleImageAsFile} id="inputImgUp"/>
-                    {
-                      imageAsUrl === "" ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      null
-                    }
-                  </label>
-                  <button type="button" onClick={() => document.getElementById('inputImgUp').click()} className="btnUp">
-                    <span>Subir foto</span>
-                    <i className="fas fa-upload"></i>
-                  </button>
+                </label>
+                <p>De los números disponibles, elige tantos como hayas pagado (Ejemplo: si pagaste 3 elige 3)</p>
+                <label>Lista de números disponibles</label>
+                <ul>
                   {
-                    uploadState !== 0 && <p className="progress">Subido {uploadState}%</p>
+                      numbers.length > 0 && numbers.map((item,i) => {
+                        return (
+                          <li key={i}>
+                            <input type="checkbox" onChange={(e) => handleCheckboxes(e)} value={item.number}/>
+                            <span>{item.number}</span>
+                          </li>
+                        )
+                      })
                   }
-                  {
-                    imageAsUrl ? 
-                      <img src={imageAsUrl} width="100%" accept="image/jpeg, image/png" id="payImg" alt=""></img>
-                    :
-                      <div className="img-placeholder">
-                        <i className="far fa-image"></i>
-                      </div>
-                  }
-                </div> 
-                <div>
-                  <p>De los números disponibles, elige tantos como hayas pagado (Ejemplo: si pagaste 3 elige 3)</p>
-                  <label>Lista de números disponibles</label>
-                  <ul>
-                    {
-                        numbers.length > 0 && numbers.map((item,i) => {
-                          return (
-                            <li key={i}>
-                              <input type="checkbox" onChange={(e) => handleCheckboxes(e)} value={item.number}/>
-                              <span>{item.number}</span>
-                            </li>
-                          )
-                        })
-                    }
-                  </ul>
-                  <label>
-                  {
-                    selectedNumbers.length === 0 &&
-                    <Alert alertMessage="Campo obligatorio"/> 
-                  }
-                  </label>
-                  {/* <label>
-                    Escribe tus números
-                    <br/>
-                    <textarea onChange={handleNumbers} placeholder="100, 101, 102" id="selNumbers"></textarea>
-                    {
-                      selectedNumbers.length === 0 ? 
-                      <Alert alertMessage="Campo obligatorio"/> :
-                      !isNumberValid && <Error errorMesssage="Los numeros no están correctamente escritos, valide los siguientes datos: números separados por coma, números sin repetir"/>
-                    }
-                  </label> */}
-                  <br />
-                </div> 
-              </div>
-            </section>
-            <footer>
-              <button type="submit">
-                <span>Enviar</span>
-                <i className="fas fa-paper-plane"></i>
-              </button>
-            </footer>
-          </form>
+                </ul>
+                <label>
+                {
+                  selectedNumbers.length === 0 &&
+                  <Alert alertMessage="Campo obligatorio"/> 
+                }
+                </label>
+                <br />
+              </div> 
+            </div>
+          </section>
+          <footer>
+            <button type="submit">
+              <span>Enviar</span>
+              <i className="fas fa-paper-plane"></i>
+            </button>
+          </footer>
+        </form>
       </main>
     </div>
   );
