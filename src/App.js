@@ -369,7 +369,7 @@ const App = () => {
                         numbers.length > 0 && numbers.map((item,i) => {
                           return (
                             <li key={i}>
-                              <input type="checkbox" onChange={(e) => handleCheckboxes(e)}/>
+                              <input type="checkbox" onChange={(e) => handleCheckboxes(e)} value={item.number}/>
                               <span>{item.number}</span>
                             </li>
                           )
