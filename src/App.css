@@ -36,7 +36,7 @@ i {
 }
 
 .page::before {
-  position: absolute;
+  position: fixed;
   content: '';
   z-index: -3;
   top: 0;
@@ -47,7 +47,7 @@ i {
 }
 
 .page::after {
-  position: absolute;
+  position: fixed;
   content: '';
   z-index: -1;
   top: 200px;
