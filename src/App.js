@@ -28,6 +28,8 @@ const App = () => {
   const [payValue, setPayValue] = useState("")
   const [isPayValid, setIsPayValid] = useState(false)
 
+  const [alertMessage, setAlertMessage] = useState("")
+
   const validateName = (event) => {
     const inputName = event.target.value
     const re = /^[a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[a-zA-ZÀ-ÿ\u00f1\u00d1]+$/
@@ -113,12 +115,17 @@ const App = () => {
     setFirstName("")
     setLastName("")
     setPhone("")
+    setLocalPhone("")
     setMail("")
     setGroup("")
     setSelectedNumbers([])
     setImageAsFile("")
     setImageAsUrl("")
+    setPaymentType("")
+    setPayValue("")
+    setTicketNumber("")
     setUploadState(0)
+    updateNumbers()
   }
 
   const handleImageAsFile = async (e) => {
@@ -163,41 +170,71 @@ const App = () => {
     // after the decimal.
     return '_' + Math.random().toString(36).substr(2, 9);
   };
+
+  const updateNumbersFromDB = (selectedNumbers) => {
+    const error = ""
+    selectedNumbers.forEach(number => {
+      const numberid = db.collection("numbers").doc(number)
+      numberid.update({
+        selected: true
+      })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch((error) => {
+        error = "Hubo un error al enviar el formulario, vuelve a intentarlo"
+        console.error("Error removing document: ", error);
+      });
+    })
+
+   if(error !== "")
+      return error
+    else 
+      return "OK"
+  }
+  
+  const insertContactInDB = (newContact) => {
+    db.collection('contacts').add(newContact)
+    .then(() => {
+      alert("Formulario enviado con éxito")
+      resetForm()
+    })
+    .catch((error) => {
+      console.log(error.message) 
+      setAlertMessage("Hubo un error al enviar el formulario, vuelve a intentarlo")
+    })
+  }
   
   const handleSubmit = (event) => {
     event.preventDefault()
-    console.log({
-      firstName,
-      lastName,
-      phone,
-      localPhone,
-      mail,
-      imageAsUrl,
-      date: new Date().toLocaleString(),
-      group,
-      selectedNumbers,
-      paymentType,
-      ticketNumber,
-      payValue
-    })
-    resetForm()
-    // db.collection('contacts').add({
-    //   firstName,
-    //   lastName,
-    //   phone,
-    //   mail,
-    //   imageAsUrl,
-    //   date: new Date().toLocaleString(),
-    //   group,
-    //   selectedNumbers,
-    // })
-    // .then(() => {
-    //   alert("Data added successfully")
-    //   resetForm()
-    // })
-    // .catch((error) => {
-    //   alert(error.message)  
-    // })
+    if(firstName === '' || lastName === '' || phone === '' || localPhone === '' || mail === '' || imageAsUrl === '' || selectedNumbers.length === 0 || ticketNumber === '' || payValue === '') {
+      setAlertMessage("Completa todos los campos antes de enviar")
+    } else if (!isFirstNameValid || !isLastNameValid || !isLocalPhoneValid || !isMailValid || !isPayValid || !isPhoneValid || !isTicketValid ) {
+      setAlertMessage("Existen algunos campos con error, corrigelos y vuelve a intentar enviar el formulario")
+    } else {
+      setAlertMessage("")
+      const newContact = {
+        firstName,
+        lastName,
+        phone,
+        localPhone,
+        mail,
+        imageAsUrl,
+        date: new Date().toLocaleString(),
+        group,
+        selectedNumbers,
+        paymentType,
+        ticketNumber,
+        payValue
+      }
+      console.log(newContact)
+      let error = updateNumbersFromDB(newContact.selectedNumbers)
+      if(error === "OK"){
+        insertContactInDB(newContact)
+      } else {
+        setAlertMessage(error)
+      }
+    }
   }
 
   useEffect(()=> {
@@ -225,25 +262,28 @@ const App = () => {
 
     
   }, [imageAsFile])
-
-  useEffect(()=> {
+  
+  const updateNumbers = () => {
     db.collection('numbers').orderBy("number", "asc").get()
       .then((querySnapshot) => {
         let docs = []
         querySnapshot.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data().number);
-          docs.push({id: doc.id, number: doc.data().number})
+          console.log(doc.id, " => ", doc.data().number, doc.data().selected);
+          if(!doc.data().selected)
+            docs.push({id: doc.id, number: doc.data().number})
         });
         setNumbers(docs)
       })
       .catch(function(error) {
           console.log("Error getting documents: ", error);
       });
-    }, [])
+  }
 
-    // console.log(numbers)
+  useEffect(()=> {
+    updateNumbers()
+  }, [])
     
-    return (
+  return (
     <div className="page">
       <main className="">
         <header>
@@ -459,6 +499,12 @@ const App = () => {
             </div>
           </section>
           <footer>
+                <br/>
+                {
+                  alertMessage !== "" &&
+                  <Alert alertMessage={alertMessage}/> 
+                }
+          
             <button type="submit">
               <span>Enviar</span>
               <i className="fas fa-paper-plane"></i>
