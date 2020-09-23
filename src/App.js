@@ -287,8 +287,8 @@ const App = () => {
     <div className="page">
       <main className="">
         <header>
-          <img src={require('./assets/full-ogo.jpg')} width="100%" className="logo" alt=""/>
-          <img src={require('./assets/title.jpeg')} width="100%" className="logo" alt=""/>
+          <img src={require('./assets/full-ogo.jpg')} className="logo" alt=""/>
+          <img src={require('./assets/title.jpeg')} className="logo" alt=""/>
           {/* <h1> Rifa navideña Miles Christi </h1> */}
         </header>
         <form onSubmit={handleSubmit}>
@@ -406,7 +406,7 @@ const App = () => {
             <hr/>
             <h3>Información sobre el boleto</h3>
             <div className="numbers-info">
-              <div>
+              <div className="image">
                 <label>
                   Sube la foto de tu pago
                   <input type="file" onChange={handleImageAsFile} id="inputImgUp"/>
