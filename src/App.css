@@ -163,6 +163,10 @@ input {
   width: 100%;
 }
 
+input[type="checkbox"] {
+  width: auto;
+}
+
 input[type="file"] {
   background-color: white;
   border: 2px solid rgba(0,0,0,0);
