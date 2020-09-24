@@ -4,7 +4,7 @@ import imageCompression from "browser-image-compression";
 import "./App.css";
 import Error from "./components/Error";
 import Alert from "./components/Alert";
-import InitDB from "./components/InitDB";
+// import InitDB from "./components/InitDB";
 const App = () => {
   const [firstName, setFirstName] = useState("");
   const [isFirstNameValid, setIsFirstNameValid] = useState(false);
@@ -31,7 +31,7 @@ const App = () => {
 
   const [alertMessage, setAlertMessage] = useState("");
   // const [isFormSending, setIsFormSending] = useState(false);
-  const [formSent, setFormSent] = useState(false)
+  const [formSent, setFormSent] = useState(false);
 
   const validateName = (event) => {
     const inputName = event.target.value;
@@ -110,26 +110,26 @@ const App = () => {
     }
   };
 
-  const resetForm = () => {
-    // if (imageAsUrl !== "") {
-    //   const imageInput = document.getElementById("payImg");
-    //   imageInput.value = null;
-    // }
-    // setFirstName("");
-    // setLastName("");
-    // setPhone("");
-    // setLocalPhone("");
-    // setMail("");
-    // setGroup("");
-    // setSelectedNumbers([]);
-    // setImageAsFile("");
-    // setImageAsUrl("");
-    // setPaymentType("");
-    // setPayValue("");
-    // setTicketNumber("");
-    // setUploadState(0);
-    // updateNumbers();
-  };
+  // const resetForm = () => {
+  //   if (imageAsUrl !== "") {
+  //     const imageInput = document.getElementById("payImg");
+  //     imageInput.value = null;
+  //   }
+  //   setFirstName("");
+  //   setLastName("");
+  //   setPhone("");
+  //   setLocalPhone("");
+  //   setMail("");
+  //   setGroup("");
+  //   setSelectedNumbers([]);
+  //   setImageAsFile("");
+  //   setImageAsUrl("");
+  //   setPaymentType("");
+  //   setPayValue("");
+  //   setTicketNumber("");
+  //   setUploadState(0);
+  //   updateNumbers();
+  // };
 
   const handleImageAsFile = async (e) => {
     const image = e.target.files[0];
@@ -143,13 +143,13 @@ const App = () => {
     };
     try {
       const compressedFile = await imageCompression(imageFile, options);
-      console.log(
-        "compressedFile instanceof Blob",
-        compressedFile instanceof Blob
-      ); // true
-      console.log(
-        `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
-      ); // smaller than maxSizeMB
+      // console.log(
+      //   "compressedFile instanceof Blob",
+      //   compressedFile instanceof Blob
+      // ); // true
+      // console.log(
+      //   `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+      // ); // smaller than maxSizeMB
       setImageAsFile(compressedFile);
     } catch (error) {
       console.log(error);
@@ -199,20 +199,20 @@ const App = () => {
 
   const insertContactInDB = (newContact) => {
     db.collection("contacts")
-    .add(newContact)
-    .then(() => {
-      alert("Formulario enviado con éxito");
-      setFormSent(true)
+      .add(newContact)
+      .then(() => {
+        alert("Formulario enviado con éxito");
+        setFormSent(true);
       })
       .catch((error) => {
-        console.log(error.message);
+        // console.log(error.message);
         setAlertMessage(
           "Hubo un error al enviar el formulario, vuelve a intentarlo"
         );
       });
-    };
-    
-    const handleSubmit = (event) => {
+  };
+
+  const handleSubmit = (event) => {
     event.preventDefault();
     if (
       firstName === "" ||
@@ -224,12 +224,12 @@ const App = () => {
       selectedNumbers.length === 0 ||
       ticketNumber === "" ||
       payValue === ""
-      ) {
-        setAlertMessage("Completa todos los campos antes de enviar");
-      } else if (
-        !isFirstNameValid ||
-        !isLastNameValid ||
-        !isLocalPhoneValid ||
+    ) {
+      setAlertMessage("Completa todos los campos antes de enviar");
+    } else if (
+      !isFirstNameValid ||
+      !isLastNameValid ||
+      !isLocalPhoneValid ||
       !isMailValid ||
       !isPayValid ||
       !isPhoneValid ||
@@ -237,24 +237,24 @@ const App = () => {
     ) {
       setAlertMessage(
         "Existen algunos campos con error, corrigelos y vuelve a intentar enviar el formulario"
-        );
-      } else {
-        setAlertMessage("");
-        const newContact = {
-          firstName,
-          lastName,
-          phone,
-          localPhone,
-          mail,
-          imageAsUrl,
-          date: new Date().toLocaleString(),
-          group,
-          selectedNumbers,
-          paymentType,
+      );
+    } else {
+      setAlertMessage("");
+      const newContact = {
+        firstName,
+        lastName,
+        phone,
+        localPhone,
+        mail,
+        imageAsUrl,
+        date: new Date().toLocaleString(),
+        group,
+        selectedNumbers,
+        paymentType,
         ticketNumber,
         payValue,
       };
-      console.log(newContact);
+      // console.log(newContact);
       let error = updateNumbersFromDB(newContact.selectedNumbers);
       if (error === "OK") {
         insertContactInDB(newContact);
@@ -307,7 +307,7 @@ const App = () => {
       .then((querySnapshot) => {
         let docs = [];
         querySnapshot.forEach((doc) => {
-          console.log(doc.id, " => ", doc.data().number, doc.data().selected);
+          // console.log(doc.id, " => ", doc.data().number, doc.data().selected);
           docs.push({ id: doc.id, number: doc.data().number });
         });
         setNumbers(docs);
@@ -330,301 +330,301 @@ const App = () => {
           <img src={require("./assets/title.jpeg")} className="logo" alt="" />
           {/* <h1> Rifa navideña Miles Christi </h1> */}
         </header>
-        {
-          !formSent ?
+        {!formSent ? (
           <form onSubmit={handleSubmit}>
-          <section>
-            <h3>Información personal</h3>
-            <div className="basic-info">
-              <label className="input-a">
-                Nombres
-                <br />
-                <input
-                  placeholder="Nombres"
-                  value={firstName}
-                  onChange={(e) => validateName(e)}
-                />
-                {firstName === "" ? (
-                  <Alert alertMessage="Campo obligatorio" />
-                ) : (
-                  !isFirstNameValid && (
-                    <Error errorMesssage="El nombre no es correcto" />
-                  )
-                )}
-                <br />
-              </label>
-              <label className="input-aa">
-                Apellidos
-                <br />
-                <input
-                  placeholder="Apellidos"
-                  value={lastName}
-                  onChange={(e) => validateLastName(e)}
-                />
-                {lastName === "" ? (
-                  <Alert alertMessage="Campo obligatorio" />
-                ) : (
-                  !isLastNameValid && (
-                    <Error errorMesssage="El apellido no es correcto" />
-                  )
-                )}
-                <br />
-              </label>
-              <label className="input-b">
-                Celular (a 10 numeros)
-                <br />
-                <input
-                  placeholder="3320202020"
-                  value={phone}
-                  onChange={(e) => validatePhone(e)}
-                />
-                {phone === "" ? (
-                  <Alert alertMessage="Campo obligatorio" />
-                ) : (
-                  !isPhoneValid && (
-                    <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales." />
-                  )
-                )}
-                <br />
-              </label>
-              <label className="input-bb">
-                Teléfono fijo (a 10 numeros)
-                <br />
-                <input
-                  placeholder="3320202020"
-                  value={localPhone}
-                  onChange={(e) => validateLocalPhone(e)}
-                />
-                {localPhone === "" ? (
-                  <Alert alertMessage="Campo obligatorio" />
-                ) : (
-                  !isLocalPhoneValid && (
-                    <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales." />
-                  )
-                )}
-                <br />
-              </label>
-              <label className="input-c">
-                Correo electrónico
-                <br />
-                <input
-                  placeholder="nombre@mail.com"
-                  value={mail}
-                  onChange={(e) => validateMail(e)}
-                />
-                {mail === "" ? (
-                  <Alert alertMessage="Campo obligatorio" />
-                ) : (
-                  !isMailValid && (
-                    <Error errorMesssage="El mail no es correcto" />
-                  )
-                )}
-                <br />
-              </label>
-              <label className="input-d">
-                Grupo al que perteneces
-                <br />
-                <select
-                  value={group}
-                  onChange={(e) => setGroup(e.target.value)}
-                >
-                  <option value="Niguno">Ninguno </option>
-                  <option value="Jóvenes con Orgullo Católico ">
-                    Jóvenes con Orgullo Católico{" "}
-                  </option>
-                  <option value="Tota Pulchra Guadalupe">
-                    Tota Pulchra Guadalupe
-                  </option>
-                  <option value="Formación mujeres">Formación mujeres</option>
-                  <option value="Formación para jóvenes">
-                    Formación para jóvenes
-                  </option>
-                  <option value="Formación hombres">Formación hombres</option>
-                  <option value="Grupo de acólitos San Miguel Arcángel">
-                    Grupo de acólitos San Miguel Arcángel
-                  </option>
-                  <option value="Ponencias católicas">
-                    Ponencias católicas Jóvenes
-                  </option>
-                  <option value="Ponencias católicas">
-                    Ponencias católicas Matrimonios
-                  </option>
-                  <option value="Los Tesoros de la Fe">
-                    Los Tesoros de la Fe
-                  </option>
-                  <option value="El Faro">El Faro</option>
-                  <option value="Coro Benedicto XVI">
-                    Coro Benedicto XVI
-                  </option>
-                  <option value="Pulchritas de María">
-                    Pulchritas de María
-                  </option>
-                  <option value="Grupos de Perseverancia ">
-                    Grupos de Perseverancia{" "}
-                  </option>
-                  <option value="Ejercicios Espirituales Ignacianos">
-                    Ejercicios Espirituales Ignacianos
-                  </option>
-                  <option value="Café post Ejercicios">
-                    Café post Ejercicios
-                  </option>
-                  <option value="Otro">Otro</option>
-                </select>
-                {/* <input
+            <section>
+              <h3>Información personal</h3>
+              <div className="basic-info">
+                <label className="input-a">
+                  Nombres
+                  <br />
+                  <input
+                    placeholder="Nombres"
+                    value={firstName}
+                    onChange={(e) => validateName(e)}
+                  />
+                  {firstName === "" ? (
+                    <Alert alertMessage="Campo obligatorio" />
+                  ) : (
+                    !isFirstNameValid && (
+                      <Error errorMesssage="El nombre no es correcto" />
+                    )
+                  )}
+                  <br />
+                </label>
+                <label className="input-aa">
+                  Apellidos
+                  <br />
+                  <input
+                    placeholder="Apellidos"
+                    value={lastName}
+                    onChange={(e) => validateLastName(e)}
+                  />
+                  {lastName === "" ? (
+                    <Alert alertMessage="Campo obligatorio" />
+                  ) : (
+                    !isLastNameValid && (
+                      <Error errorMesssage="El apellido no es correcto" />
+                    )
+                  )}
+                  <br />
+                </label>
+                <label className="input-b">
+                  Celular (a 10 numeros)
+                  <br />
+                  <input
+                    placeholder="3320202020"
+                    value={phone}
+                    onChange={(e) => validatePhone(e)}
+                  />
+                  {phone === "" ? (
+                    <Alert alertMessage="Campo obligatorio" />
+                  ) : (
+                    !isPhoneValid && (
+                      <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales." />
+                    )
+                  )}
+                  <br />
+                </label>
+                <label className="input-bb">
+                  Teléfono fijo (a 10 numeros)
+                  <br />
+                  <input
+                    placeholder="3320202020"
+                    value={localPhone}
+                    onChange={(e) => validateLocalPhone(e)}
+                  />
+                  {localPhone === "" ? (
+                    <Alert alertMessage="Campo obligatorio" />
+                  ) : (
+                    !isLocalPhoneValid && (
+                      <Error errorMesssage="El número no es correcto. Solo debe contener 10 dígitos sin espacios ni caracteres especiales." />
+                    )
+                  )}
+                  <br />
+                </label>
+                <label className="input-c">
+                  Correo electrónico
+                  <br />
+                  <input
+                    placeholder="nombre@mail.com"
+                    value={mail}
+                    onChange={(e) => validateMail(e)}
+                  />
+                  {mail === "" ? (
+                    <Alert alertMessage="Campo obligatorio" />
+                  ) : (
+                    !isMailValid && (
+                      <Error errorMesssage="El mail no es correcto" />
+                    )
+                  )}
+                  <br />
+                </label>
+                <label className="input-d">
+                  Grupo al que perteneces
+                  <br />
+                  <select
+                    value={group}
+                    onChange={(e) => setGroup(e.target.value)}
+                  >
+                    <option value="Niguno">Ninguno </option>
+                    <option value="Jóvenes con Orgullo Católico ">
+                      Jóvenes con Orgullo Católico{" "}
+                    </option>
+                    <option value="Tota Pulchra Guadalupe">
+                      Tota Pulchra Guadalupe
+                    </option>
+                    <option value="Formación mujeres">Formación mujeres</option>
+                    <option value="Formación para jóvenes">
+                      Formación para jóvenes
+                    </option>
+                    <option value="Formación hombres">Formación hombres</option>
+                    <option value="Grupo de acólitos San Miguel Arcángel">
+                      Grupo de acólitos San Miguel Arcángel
+                    </option>
+                    <option value="Ponencias católicas">
+                      Ponencias católicas Jóvenes
+                    </option>
+                    <option value="Ponencias católicas">
+                      Ponencias católicas Matrimonios
+                    </option>
+                    <option value="Los Tesoros de la Fe">
+                      Los Tesoros de la Fe
+                    </option>
+                    <option value="El Faro">El Faro</option>
+                    <option value="Coro Benedicto XVI">
+                      Coro Benedicto XVI
+                    </option>
+                    <option value="Pulchritas de María">
+                      Pulchritas de María
+                    </option>
+                    <option value="Grupos de Perseverancia ">
+                      Grupos de Perseverancia{" "}
+                    </option>
+                    <option value="Ejercicios Espirituales Ignacianos">
+                      Ejercicios Espirituales Ignacianos
+                    </option>
+                    <option value="Café post Ejercicios">
+                      Café post Ejercicios
+                    </option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                  {/* <input
                 placeholder="P.e. JUCOC, Pulchritas, Formación para mujeres, etc"
                 value={group}
                 onChange={(e) => setGroup(e.target.value)}
               /> */}
-                <br />
-              </label>
-            </div>
-            <hr />
-            <h3>Información sobre el boleto</h3>
-            <div className="numbers-info">
-              <div className="image">
-                <label>
-                  Sube la foto de tu pago
-                  <input
-                    type="file"
-                    onChange={handleImageAsFile}
-                    id="inputImgUp"
-                  />
-                  {imageAsUrl === "" ? (
-                    <Alert alertMessage="Campo obligatorio" />
-                  ) : null}
+                  <br />
                 </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    document.getElementById("inputImgUp").click()
-                  }
-                  className="btnUp"
-                >
-                  <span>Subir foto</span>
-                  <i className="fas fa-upload"></i>
-                </button>
-                {uploadState !== 0 && (
-                  <p className="progress">Subido {uploadState}%</p>
-                )}
-                {imageAsUrl ? (
-                  <img
-                    src={imageAsUrl}
-                    width="100%"
-                    accept="image/jpeg, image/png"
-                    id="payImg"
-                    alt=""
-                  ></img>
-                ) : (
-                  <div className="img-placeholder">
-                    <i className="far fa-image"></i>
-                  </div>
-                )}
               </div>
-              <div>
-                <label>
-                  Pago hecho en
-                  <select
-                    value={paymentType}
-                    onChange={(e) => setPaymentType(e.target.value)}
+              <hr />
+              <h3>Información sobre el boleto</h3>
+              <div className="numbers-info">
+                <div className="image">
+                  <label>
+                    Sube la foto de tu pago
+                    <input
+                      type="file"
+                      onChange={handleImageAsFile}
+                      id="inputImgUp"
+                    />
+                    {imageAsUrl === "" ? (
+                      <Alert alertMessage="Campo obligatorio" />
+                    ) : null}
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      document.getElementById("inputImgUp").click()
+                    }
+                    className="btnUp"
                   >
-                    <option value="Oxxo">Oxxo</option>
-                    <option value="Transferencia bancaria">
-                      Transferencia bancaria
-                    </option>
-                  </select>
-                  <br />
-                </label>
-                <label>
-                  Número de comprobante
-                  <br />
-                  <input
-                    placeholder="101010101010"
-                    value={ticketNumber}
-                    onChange={(e) => validateTicketnumber(e)}
-                  />
-                  {ticketNumber === "" ? (
-                    <Alert alertMessage="Campo obligatorio" />
-                  ) : (
-                    !isTicketValid && (
-                      <Error errorMesssage="El ticket no es correcto" />
-                    )
+                    <span>Subir foto</span>
+                    <i className="fas fa-upload"></i>
+                  </button>
+                  {uploadState !== 0 && (
+                    <p className="progress">Subido {uploadState}%</p>
                   )}
-                  <br />
-                </label>
-                <label>
-                  Cantidad depositada (en pesos MXN)
-                  <br />
-                  <input
-                    placeholder="2000"
-                    value={payValue}
-                    onChange={(e) => validatePayValue(e)}
-                  />
-                  {payValue === "" ? (
-                    <Alert alertMessage="Campo obligatorio" />
+                  {imageAsUrl ? (
+                    <img
+                      src={imageAsUrl}
+                      width="100%"
+                      accept="image/jpeg, image/png"
+                      id="payImg"
+                      alt=""
+                    ></img>
                   ) : (
-                    !isPayValid && (
-                      <Error errorMesssage="El número no es correcto" />
-                    )
+                    <div className="img-placeholder">
+                      <i className="far fa-image"></i>
+                    </div>
                   )}
-                  <br />
-                </label>
-                <p>
-                  De los números disponibles, elige tantos como hayas pagado
-                  (Ejemplo: si pagaste 3 elige 3)
-                </p>
-                <label>Lista de números disponibles</label>
-                <div className="numberList">
-                  <ul>
-                    {numbers.length > 0 &&
-                      numbers.map((item, i) => {
-                        return (
-                          <li key={i}>
-                            <input
-                              type="checkbox"
-                              onChange={(e) => handleCheckboxes(e)}
-                              value={item.number}
-                            />
-                            <span>{item.number}</span>
-                          </li>
-                        );
-                      })}
-                  </ul>
                 </div>
-                <label>
-                  {selectedNumbers.length === 0 && (
-                    <Alert alertMessage="Campo obligatorio" />
-                  )}
-                </label>
-                <br />
+                <div>
+                  <label>
+                    Pago hecho en
+                    <select
+                      value={paymentType}
+                      onChange={(e) => setPaymentType(e.target.value)}
+                    >
+                      <option value="Oxxo">Oxxo</option>
+                      <option value="Transferencia bancaria">
+                        Transferencia bancaria
+                      </option>
+                    </select>
+                    <br />
+                  </label>
+                  <label>
+                    Número de comprobante
+                    <br />
+                    <input
+                      placeholder="101010101010"
+                      value={ticketNumber}
+                      onChange={(e) => validateTicketnumber(e)}
+                    />
+                    {ticketNumber === "" ? (
+                      <Alert alertMessage="Campo obligatorio" />
+                    ) : (
+                      !isTicketValid && (
+                        <Error errorMesssage="El ticket no es correcto" />
+                      )
+                    )}
+                    <br />
+                  </label>
+                  <label>
+                    Cantidad depositada (en pesos MXN)
+                    <br />
+                    <input
+                      placeholder="2000"
+                      value={payValue}
+                      onChange={(e) => validatePayValue(e)}
+                    />
+                    {payValue === "" ? (
+                      <Alert alertMessage="Campo obligatorio" />
+                    ) : (
+                      !isPayValid && (
+                        <Error errorMesssage="El número no es correcto" />
+                      )
+                    )}
+                    <br />
+                  </label>
+                  <p>
+                    De los números disponibles, elige tantos como hayas pagado
+                    (Ejemplo: si pagaste 3 elige 3)
+                  </p>
+                  <label>Lista de números disponibles</label>
+                  <div className="numberList">
+                    <ul>
+                      {numbers.length > 0 &&
+                        numbers.map((item, i) => {
+                          return (
+                            <li key={i}>
+                              <input
+                                type="checkbox"
+                                onChange={(e) => handleCheckboxes(e)}
+                                value={item.number}
+                              />
+                              <span>{item.number}</span>
+                            </li>
+                          );
+                        })}
+                    </ul>
+                  </div>
+                  <label>
+                    {selectedNumbers.length === 0 && (
+                      <Alert alertMessage="Campo obligatorio" />
+                    )}
+                  </label>
+                  <br />
+                </div>
               </div>
-            </div>
-          </section>
-          <footer>
-            <br />
-            {alertMessage !== "" && <Alert alertMessage={alertMessage} />}
-            <button type="submit">
-              <span>Enviar</span>
-              <i className="fas fa-paper-plane"></i>
-            </button>
-          </footer>
-        </form>
-          :
+            </section>
+            <footer>
+              <br />
+              {alertMessage !== "" && <Alert alertMessage={alertMessage} />}
+              <button type="submit">
+                <span>Enviar</span>
+                <i className="fas fa-paper-plane"></i>
+              </button>
+            </footer>
+          </form>
+        ) : (
           <section className="thanks">
             <h3>Gracias por registrarte</h3>
-            <b>Toma un screenshot de esta pantalla o anota los número elegidos en una hoja pierdas los números elegidos. Nosotros también los guardaremos.</b><span> 😉</span>
+            <b>
+              Toma un screenshot de esta pantalla o anota los número elegidos en
+              una hoja pierdas los números elegidos. Nosotros también los
+              guardaremos.
+            </b>
+            <span role="img" aria-label="guiño" aria-labelledby="mc"> 😉</span>
             <p>Elegiste los siguientes números:</p>
             <ul>
-              {
-                selectedNumbers.length > 0 && selectedNumbers.map(item => {
-                  return (
-                    <li key={item}>{item}</li>
-                  )
-                })
-              }
+              {selectedNumbers.length > 0 &&
+                selectedNumbers.map((item) => {
+                  return <li key={item}>{item}</li>;
+                })}
             </ul>
           </section>
-        }
-        
+        )}
       </main>
     </div>
   );
