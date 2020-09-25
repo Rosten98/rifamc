@@ -25,6 +25,10 @@ h3 {
   margin: .5em 0;
 }
 
+a {
+  text-decoration: none;
+}
+
 i {
   margin: 0 1em;
   font-size: 1.2em;
@@ -302,7 +306,7 @@ footer {
   border-radius: 50%;
   color: white;
   font-weight: bold;
-  margin: 0 10px;
+  margin: 10px 10px;
   width: 50px;
 }
 /* @media only screen and (min-width: 600px) {
@@ -366,5 +370,11 @@ footer {
 
    .numbers-info .image {
      margin-right: 1.5em;
+   }
+
+   .thanks {
+     display: flex;
+     justify-content: space-between;
+     /* align-items: top; */
    }
  }

@@ -428,30 +428,27 @@ const App = () => {
                     onChange={(e) => setGroup(e.target.value)}
                   >
                     <option value="Niguno">Ninguno </option>
-                    <option value="Jóvenes con Orgullo Católico ">
-                      Jóvenes con Orgullo Católico{" "}
+                    <option value="Jóvenes Universitarios con Orgullo Católico ">
+                      Jóvenes Universitarios con Orgullo Católico{" "}
                     </option>
                     <option value="Tota Pulchra Guadalupe">
                       Tota Pulchra Guadalupe
                     </option>
-                    <option value="Formación mujeres">Formación mujeres</option>
-                    <option value="Formación para jóvenes">
-                      Formación para jóvenes
+                    <option value="Formación NT martes">
+                      Formación NT martes
                     </option>
-                    <option value="Formación hombres">Formación hombres</option>
-                    <option value="Grupo de acólitos San Miguel Arcángel">
-                      Grupo de acólitos San Miguel Arcángel
+                    <option value="Formación CCCE Miércoles">
+                      Formación CCCE Miércoles
                     </option>
-                    <option value="Ponencias católicas">
-                      Ponencias católicas Jóvenes
+                    <option value="Formación CCCE jueves">
+                      Formación CCCE jueves
                     </option>
-                    <option value="Ponencias católicas">
-                      Ponencias católicas Matrimonios
+                    <option value="Juventud Miles Christi">
+                      Juventud Miles Christi
                     </option>
-                    <option value="Los Tesoros de la Fe">
-                      Los Tesoros de la Fe
+                    <option value="El Faro">
+                      El Faro
                     </option>
-                    <option value="El Faro">El Faro</option>
                     <option value="Coro Benedicto XVI">
                       Coro Benedicto XVI
                     </option>
@@ -464,8 +461,11 @@ const App = () => {
                     <option value="Ejercicios Espirituales Ignacianos">
                       Ejercicios Espirituales Ignacianos
                     </option>
-                    <option value="Café post Ejercicios">
-                      Café post Ejercicios
+                    <option value="Áncora">
+                      Áncora
+                    </option>
+                    <option value="Madonna Tota Pulchra">
+                      Madonna Tota Pulchra
                     </option>
                     <option value="Otro">Otro</option>
                   </select>
@@ -609,20 +609,28 @@ const App = () => {
           </form>
         ) : (
           <section className="thanks">
-            <h3>Gracias por registrarte</h3>
-            <b>
-              Toma un screenshot de esta pantalla o anota los número elegidos en
-              una hoja pierdas los números elegidos. Nosotros también los
-              guardaremos.
-            </b>
-            <span role="img" aria-label="guiño" aria-labelledby="mc"> 😉</span>
-            <p>Elegiste los siguientes números:</p>
-            <ul>
-              {selectedNumbers.length > 0 &&
-                selectedNumbers.map((item) => {
-                  return <li key={item}>{item}</li>;
-                })}
-            </ul>
+            <div>
+              <h3>Gracias por registrarte</h3>
+              <b>
+                Toma un screenshot de esta pantalla o anota los número elegidos en
+                una hoja para que no pierdas los números elegidos. Nosotros también los
+                guardaremos.
+              </b>
+              <span role="img" aria-label="guiño" aria-labelledby="mc"> 😉</span>
+              <p>Elegiste los siguientes números:</p>
+              <ul>
+                {selectedNumbers.length > 0 &&
+                  selectedNumbers.map((item) => {
+                    return <li key={item}>{item}</li>;
+                  })}
+              </ul>
+            </div>
+            <div className="downloadImg">
+                <button type="button" onClick={() => document.getElementById('download').click()}>Descargar imagen</button>
+                <a href={require("./assets/merry_xmas.jpg")} id="download" download="Feliz_navidad">
+                  <img src={require("./assets/merry_xmas.jpg")} alt="Imagen de agradecimiento" width="100%"/>
+                </a>
+            </div>
           </section>
         )}
       </main>
