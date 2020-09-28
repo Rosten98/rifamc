@@ -248,6 +248,12 @@ button:hover {
   background-color: rgba(34,116,165,.90);
 }
 
+.verBtn {
+  margin: 0;
+  font-size: .8em;
+  padding: 10px;
+}
+
 #inputImgUp {
   display: none;
 }

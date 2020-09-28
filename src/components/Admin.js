@@ -37,7 +37,7 @@ const Admin = () => {
                   <td>1234567890</td>
                   <td>$123</td>
                   <td><ul><li>1</li><li>2</li></ul></td>
-                  <td><a href="#">Ver imagen</a></td>
+                  <td><button className="verBtn">Ver imagen</button></td>
                 </tr>
                 <tr>
                   <td>Jill</td>
@@ -50,7 +50,7 @@ const Admin = () => {
                   <td>1234567890</td>
                   <td>$123</td>
                   <td><ul><li>1</li><li>2</li></ul></td>
-                  <td><a href="#">Ver imagen</a></td>
+                  <td><button className="verBtn">Ver imagen</button></td>
                 </tr>
               </tbody>
             </table>
