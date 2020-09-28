@@ -467,6 +467,9 @@ const App = () => {
                     <option value="Madonna Tota Pulchra">
                       Madonna Tota Pulchra
                     </option>
+                    <option value="Madonna Tota Pulchra">
+                      Joselitos
+                    </option>
                     <option value="Otro">Otro</option>
                   </select>
                   {/* <input
