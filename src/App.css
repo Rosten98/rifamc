@@ -34,6 +34,30 @@ i {
   font-size: 1.2em;
 }
 
+table {
+  background-color: white;
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+  margin-right: 2em;
+}
+
+th, td {
+  text-align: left;
+  padding: 0 1em;
+  border: 1px solid #f2f2f2;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+.admin {
+  overflow-x: auto;
+}
+
 .page {
   margin: 0;
   padding: 1em;
