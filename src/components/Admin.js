@@ -54,7 +54,7 @@ const Admin = () => {
                   <th>Correo</th>
                   <th>Grupo</th>
                   <th>Tipo de pago</th>
-                  <th>N° comprobante</th>
+                  <th>Folio de venta</th>
                   <th>Pago</th>
                   <th>Números elegidos</th>
                   <th>Comprobante de pago</th>

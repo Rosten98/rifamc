@@ -534,7 +534,7 @@ const Form = () => {
                     <br />
                   </label>
                   <label>
-                    Número de comprobante
+                    Folio de venta
                     <br />
                     <input
                       placeholder="101010101010"
