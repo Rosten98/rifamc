@@ -56,7 +56,7 @@ const Admin = () => {
             {numbersComp}
           </ul>
         </td>
-        <td><a href={participant.imageUrl}><button className="verBtn">Ver imagen</button></a></td>
+        <td><a href={participant.imageUrl} target="_blank" rel="noopener noreferrer"><button className="verBtn">Ver imagen</button></a></td>
       </tr>
     )
   })

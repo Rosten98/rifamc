@@ -610,7 +610,7 @@ const Form = () => {
         ) : (
           <section className="thanks">
             <div>
-              <h3>Gracias por registrarte</h3>
+              <h3 style={{fontSize: "2.2em"}}>¡Gracias por registrarte!</h3>
               <b>
                 Toma un screenshot de esta pantalla o anota los número elegidos en
                 una hoja para que no pierdas los números elegidos. Nosotros también los
