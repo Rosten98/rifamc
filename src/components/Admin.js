@@ -36,6 +36,31 @@ const Admin = () => {
   }, []);
 
   console.log(participants)
+  
+  const participantsComp = participants.map(participant => {
+    const numbersComp = participant.selectedNumbers.map(number => <li>{number}</li>)
+    return (
+      <tr>
+        <td>{participant.date}</td>
+        <td>{participant.firstName}</td>
+        <td>{participant.lastName}</td>
+        <td>{participant.phone}</td>
+        <td>{participant.localPhone}</td>
+        <td>{participant.mail}</td>
+        <td>{participant.group}</td>
+        <td>{participant.paymentType}</td>
+        <td>{participant.ticketNumber}</td>
+        <td>{participant.payValue}</td>
+        <td>
+          <ul>
+            {numbersComp}
+          </ul>
+        </td>
+        <td><a href={participant.imageUrl}><button className="verBtn">Ver imagen</button></a></td>
+      </tr>
+    )
+  })
+
   return (
     <div className="page">
       <main>
@@ -61,48 +86,7 @@ const Admin = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>01/02/2020</td>
-                  <td>Jill</td>
-                  <td>Smith</td>
-                  <td>5050505050</td>
-                  <td>5050505050</td>
-                  <td>correoalgolargo@mail.com</td>
-                  <td>Tota pulchra</td>
-                  <td>Transferencia</td>
-                  <td>1234567890</td>
-                  <td>$123</td>
-                  <td>
-                    <ul>
-                      <li>1</li>
-                      <li>2</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <button className="verBtn">Ver imagen</button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>01/02/2020</td>
-                  <td>Jill</td>
-                  <td>Smith</td>
-                  <td>5050505050</td>
-                  <td>5050505050</td>
-                  <td>correoalgolargo@mail.com</td>
-                  <td>Tota pulchra</td>
-                  <td>Transferencia</td>
-                  <td>1234567890</td>
-                  <td>$123</td>
-                  <td>
-                    <ul>
-                      <li>1</li>
-                      <li>2</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <button className="verBtn">Ver imagen</button>
-                  </td>
-                </tr>
+                {participantsComp}
               </tbody>
             </table>
           </div>
