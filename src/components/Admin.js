@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { CSVLink } from "react-csv";
 import { db } from "../firebase";
 import Header from "./Header";
 
@@ -36,7 +37,7 @@ const Admin = () => {
   }, []);
 
   console.log(participants)
-  
+
   const participantsComp = participants.map(participant => {
     const numbersComp = participant.selectedNumbers.map(number => <li>{number}</li>)
     return (
@@ -61,12 +62,20 @@ const Admin = () => {
     )
   })
 
+
   return (
     <div className="page">
       <main>
         <Header />
         <section>
-          <h3>Participantes registrados</h3>
+          <h3>Participantes registrados</h3>       
+          {
+            participants !== [] && 
+            <CSVLink data={participants} filename={"participantes_rifamc.csv"} className="excel">
+              Descargar información en excel
+            </CSVLink>
+
+          }    
           <div className="admin">
             <table>
               <thead>

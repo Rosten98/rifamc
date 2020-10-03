@@ -325,6 +325,16 @@ footer {
   animation: spin 2s linear infinite;
 }
 
+.excel {
+  display: inline-block;
+  color: white;
+  background-color: #1d6f42;
+  padding: 5px 20px;
+  border-radius: 10px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
