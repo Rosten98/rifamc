@@ -207,6 +207,10 @@ input[type="file"] {
   border: 2px solid rgba(0,0,0,0);
 }
 
+input[type="radio"] {
+  width: initial;
+}
+
 textarea {
   font-family: 'Poppins', sans-serif;
   border: none;
@@ -330,7 +334,7 @@ footer {
   color: white;
   background-color: #1d6f42;
   padding: 5px 20px;
-  border-radius: 10px;
+  border-radius: 5px;
   font-weight: bold;
   margin-bottom: 10px;
 }

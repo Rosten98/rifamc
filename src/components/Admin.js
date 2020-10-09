@@ -5,6 +5,77 @@ import Header from "./Header";
 
 const Admin = () => {
   const [participants, setParticipants] = useState([]);
+  const [order, setOrder] = useState("contacto");
+  const [participantsComp, setParticipantsComp] = useState();
+
+  const participantsByContact = participants.map((participant) => {
+    const numbersComp = participant.selectedNumbers.map((number) => (
+      <li>{number + "||"}</li>
+    ));
+    return (
+      <tr key={participant.ticketNumber}>
+        <td>{participant.date}</td>
+        <td>{participant.firstName}</td>
+        <td>{participant.lastName}</td>
+        <td>{participant.phone}</td>
+        <td>{participant.localPhone}</td>
+        <td>{participant.mail}</td>
+        <td>{participant.group}</td>
+        <td>{participant.paymentType}</td>
+        <td>{participant.ticketNumber}</td>
+        <td>{participant.payValue}</td>
+        <td>
+          <ul>{numbersComp}</ul>
+        </td>
+        <td>
+          <a
+            href={participant.imageUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="verBtn">Ver imagen</button>
+          </a>
+        </td>
+      </tr>
+    );
+  });
+
+  const participantsByTicket = participants.map((participant) => {
+    let helper = participant.selectedNumbers.map((number) => {
+      return (
+        <tr key={number}>
+          <td>{participant.date}</td>
+          <td>{participant.firstName}</td>
+          <td>{participant.lastName}</td>
+          <td>{participant.phone}</td>
+          <td>{participant.localPhone}</td>
+          <td>{participant.mail}</td>
+          <td>{participant.group}</td>
+          <td>{participant.paymentType}</td>
+          <td>{participant.ticketNumber}</td>
+          <td>{participant.payValue}</td>
+          <td>{number}</td>
+          <td>
+            <a
+              href={participant.imageUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="verBtn">Ver imagen</button>
+            </a>
+          </td>
+        </tr>
+      );
+    });
+    return helper;
+  });
+
+  const onRadioChange = (event) => {
+    const orderType = event.target.value;
+    if (orderType === "contacto") setParticipantsComp(participantsByContact);
+    else if (orderType === "boleto") setParticipantsComp(participantsByTicket);
+    setOrder(event.target.value);
+  };
 
   useEffect(() => {
     db.collection("contacts")
@@ -26,56 +97,93 @@ const Admin = () => {
             selectedNumbers: doc.data().selectedNumbers,
             paymentType: doc.data().paymentType,
             ticketNumber: doc.data().ticketNumber,
-            payValue: doc.data().payValue
+            payValue: doc.data().payValue,
           });
         });
         setParticipants(docs);
+        setParticipantsComp(
+          docs.map((participant) => {
+            const numbersComp = participant.selectedNumbers.map((number) => (
+              <li>{number + "||"}</li>
+            ));
+            return (
+              <tr key={participant.phone}>
+                <td>{participant.date}</td>
+                <td>{participant.firstName}</td>
+                <td>{participant.lastName}</td>
+                <td>{participant.phone}</td>
+                <td>{participant.localPhone}</td>
+                <td>{participant.mail}</td>
+                <td>{participant.group}</td>
+                <td>{participant.paymentType}</td>
+                <td>{participant.ticketNumber}</td>
+                <td>{participant.payValue}</td>
+                <td>
+                  <ul>{numbersComp}</ul>
+                </td>
+                <td>
+                  <a
+                    href={participant.imageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <button className="verBtn">Ver imagen</button>
+                  </a>
+                </td>
+              </tr>
+            );
+          })
+        );
       })
       .catch(function (error) {
         console.log("Error getting documents: ", error);
       });
   }, []);
 
-  console.log(participants)
-
-  const participantsComp = participants.map(participant => {
-    const numbersComp = participant.selectedNumbers.map(number => <li>{number}</li>)
-    return (
-      <tr>
-        <td>{participant.date}</td>
-        <td>{participant.firstName}</td>
-        <td>{participant.lastName}</td>
-        <td>{participant.phone}</td>
-        <td>{participant.localPhone}</td>
-        <td>{participant.mail}</td>
-        <td>{participant.group}</td>
-        <td>{participant.paymentType}</td>
-        <td>{participant.ticketNumber}</td>
-        <td>{participant.payValue}</td>
-        <td>
-          <ul>
-            {numbersComp}
-          </ul>
-        </td>
-        <td><a href={participant.imageUrl} target="_blank" rel="noopener noreferrer"><button className="verBtn">Ver imagen</button></a></td>
-      </tr>
-    )
-  })
-
-
   return (
     <div className="page">
       <main>
         <Header />
         <section>
-          <h3>Participantes registrados</h3>       
-          {
-            participants !== [] && 
-            <CSVLink data={participants} filename={"participantes_rifamc.csv"} className="excel">
-              Descargar información en excel
-            </CSVLink>
+          <h3>Participantes registrados</h3>
+          {participants.length > 0 && (
+            <div>
+              <CSVLink
+                data={participants}
+                filename={"participantes_rifamc.csv"}
+                className="excel"
+              >
+                Descargar información en excel
+              </CSVLink>
+              <br />
+              <label>Filtrar</label>
+              <div className="controls">
+                <label>
+                  <input
+                    type="radio"
+                    value="contacto"
+                    name="filter"
+                    checked={order === "contacto"}
+                    onChange={(event) => onRadioChange(event)}
+                  />{" "}
+                  Por contacto
+                </label>
+                <br />
+                <label>
+                  <input
+                    type="radio"
+                    value="boleto"
+                    name="filter"
+                    checked={order === "boleto"}
+                    onChange={(event) => onRadioChange(event)}
+                  />{" "}
+                  Por boleto
+                </label>
+              </div>
+            </div>
+          )}
 
-          }    
+          <br />
           <div className="admin">
             <table>
               <thead>
@@ -94,9 +202,7 @@ const Admin = () => {
                   <th>Comprobante de pago</th>
                 </tr>
               </thead>
-              <tbody>
-                {participantsComp}
-              </tbody>
+              <tbody>{participantsComp}</tbody>
             </table>
           </div>
         </section>
