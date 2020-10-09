@@ -6,14 +6,14 @@ import Header from "./Header";
 const Admin = () => {
   const [participants, setParticipants] = useState([]);
   const [order, setOrder] = useState("contacto");
-  const [participantsComp, setParticipantsComp] = useState();
+  const [participantsComp, setParticipantsComp] = useState([]);
 
   const participantsByContact = participants.map((participant) => {
     const numbersComp = participant.selectedNumbers.map((number) => (
-      <li>{number + "||"}</li>
+      <li key={number}>{number + "||"}</li>
     ));
     return (
-      <tr key={participant.ticketNumber}>
+      <tr key={participant.date}>
         <td>{participant.date}</td>
         <td>{participant.firstName}</td>
         <td>{participant.lastName}</td>
@@ -38,7 +38,7 @@ const Admin = () => {
         </td>
       </tr>
     );
-  });
+  })
 
   const participantsByTicket = participants.map((participant) => {
     let helper = participant.selectedNumbers.map((number) => {
@@ -68,12 +68,14 @@ const Admin = () => {
       );
     });
     return helper;
-  });
+  })
 
   const onRadioChange = (event) => {
     const orderType = event.target.value;
-    if (orderType === "contacto") setParticipantsComp(participantsByContact);
-    else if (orderType === "boleto") setParticipantsComp(participantsByTicket);
+    if (orderType === "contacto")
+      setParticipantsComp(participantsByContact);
+    else if (orderType === "boleto")
+      setParticipantsComp(participantsByTicket);
     setOrder(event.target.value);
   };
 
@@ -104,10 +106,10 @@ const Admin = () => {
         setParticipantsComp(
           docs.map((participant) => {
             const numbersComp = participant.selectedNumbers.map((number) => (
-              <li>{number + "||"}</li>
+              <li key={number}>{number + "||"}</li>
             ));
             return (
-              <tr key={participant.phone}>
+              <tr key={participant.date}>
                 <td>{participant.date}</td>
                 <td>{participant.firstName}</td>
                 <td>{participant.lastName}</td>
