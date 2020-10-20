@@ -5,6 +5,7 @@ import Header from "./Header";
 
 const Admin = () => {
   const [participants, setParticipants] = useState([]);
+  const [csvParticipants, setCsvParticipants] = useState([])
   const [order, setOrder] = useState("contacto");
   const [participantsComp, setParticipantsComp] = useState([]);
 
@@ -72,10 +73,34 @@ const Admin = () => {
 
   const onRadioChange = (event) => {
     const orderType = event.target.value;
-    if (orderType === "contacto")
+    if (orderType === "contacto"){
+      setCsvParticipants(participants)
       setParticipantsComp(participantsByContact);
-    else if (orderType === "boleto")
+    }
+    else if (orderType === "boleto"){
+      const newParticipants = participants.map(item => {
+        let helper = item.selectedNumbers.map(number => {
+          return {
+            date:  item.date,
+            firstName:  item.firstName,
+            lastName:  item.lastName,
+            group:  item.group,
+            numberSelected:  number,
+            phone:  item.phone,
+            localPhone:  item.localPhone,
+            mail:  item.mail,
+            payValue:  item.payValue,
+            paymentType:  item.paymentType,
+            paymentNumber:  item.ticketNumber,
+            paymentImage:  item.imageUrl,
+          }
+        })
+        return helper
+      })
+      console.log(newParticipants.flat())
+      setCsvParticipants(newParticipants.flat())
       setParticipantsComp(participantsByTicket);
+    }
     setOrder(event.target.value);
   };
 
@@ -103,6 +128,7 @@ const Admin = () => {
           });
         });
         setParticipants(docs);
+        setCsvParticipants(docs)
         setParticipantsComp(
           docs.map((participant) => {
             const numbersComp = participant.selectedNumbers.map((number) => (
@@ -151,7 +177,7 @@ const Admin = () => {
           {participants.length > 0 && (
             <div>
               <CSVLink
-                data={participants}
+                data={csvParticipants}
                 filename={"participantes_rifamc.csv"}
                 className="excel"
               >
