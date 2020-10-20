@@ -30,9 +30,8 @@ const Form = () => {
   const [isTicketValid, setIsTicketValid] = useState(false);
   const [payValue, setPayValue] = useState("");
   const [isPayValid, setIsPayValid] = useState(false);
-
   const [alertMessage, setAlertMessage] = useState("");
-  // const [isFormSending, setIsFormSending] = useState(false);
+  const [isFormSending, setIsFormSending] = useState(false);
   const [formSent, setFormSent] = useState(false);
 
   const validateName = (event) => {
@@ -205,17 +204,20 @@ const Form = () => {
       .then(() => {
         alert("Formulario enviado con éxito");
         setFormSent(true);
+        setIsFormSending(false)
       })
       .catch((error) => {
         // console.log(error.message);
         setAlertMessage(
           "Hubo un error al enviar el formulario, vuelve a intentarlo"
         );
+        setIsFormSending(false)
       });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setIsFormSending(true)
     if (
       firstName === "" ||
       lastName === "" ||
@@ -227,6 +229,7 @@ const Form = () => {
       payValue === ""
     ) {
       setAlertMessage("Completa todos los campos antes de enviar");
+      setIsFormSending(false)
     } else if (
       !isFirstNameValid ||
       !isLastNameValid ||
@@ -236,9 +239,8 @@ const Form = () => {
       !isPhoneValid ||
       !isTicketValid
     ) {
-      setAlertMessage(
-        "Existen algunos campos con error, corrigelos y vuelve a intentar enviar el formulario"
-      );
+      setAlertMessage("Existen algunos campos con error, corrigelos y vuelve a intentar enviar el formulario");
+      setIsFormSending(false)
     } else {
       setAlertMessage("");
       const newContact = {
@@ -261,6 +263,7 @@ const Form = () => {
         insertContactInDB(newContact);
       } else {
         setAlertMessage(error);
+        setIsFormSending(false)
       }
     }
   };
@@ -601,7 +604,7 @@ const Form = () => {
             <footer>
               <br />
               {alertMessage !== "" && <Alert alertMessage={alertMessage} />}
-              <button type="submit">
+              <button type="submit" disabled={isFormSending}>
                 <span>Enviar</span>
                 <i className="fas fa-paper-plane"></i>
               </button>
@@ -613,7 +616,7 @@ const Form = () => {
               <h3 style={{fontSize: "2.2em"}}>¡Gracias por registrarte!</h3>
               <b>
                 Toma un screenshot de esta pantalla o anota los número elegidos en
-                una hoja para que no pierdas los números elegidos. Nosotros también los
+                una hoja para que no los pierdas. Nosotros también los
                 guardaremos.
               </b>
               <span role="img" aria-label="guiño" aria-labelledby="mc"> 😉</span>

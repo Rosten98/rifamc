@@ -252,6 +252,13 @@ button:hover {
   background-color: rgba(34,116,165,.90);
 }
 
+button:disabled,
+button[disabled]{
+  background-color: #dddddd;
+  color: #8a8a8a;
+  cursor: initial;
+}
+
 .verBtn {
   margin: 0;
   font-size: .8em;
