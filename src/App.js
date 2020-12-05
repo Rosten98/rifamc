@@ -1,11 +1,13 @@
 import React from "react";
+import "./App.css";
 import {
   BrowserRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
 import Admin from "./components/Admin";
-import Form from "./components/Form";
+import Aviso from "./components/Aviso";
+// import Form from "./components/Form";
 
 const App = () => {
   return (
@@ -15,7 +17,8 @@ const App = () => {
           <Admin/>
         </Route>
         <Route path="/">
-          <Form />
+          {/* <Form /> */}
+          <Aviso/>
         </Route>
       </Switch>
     </Router>
