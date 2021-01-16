@@ -604,11 +604,12 @@ const Form = () => {
             <footer>
               <br />
               {alertMessage !== "" && <Alert alertMessage={alertMessage} />}
-              <button type="submit" disabled={isFormSending}>
+              <button type="submit" disabled={true}>
                 <span>Enviar</span>
                 <i className="fas fa-paper-plane"></i>
               </button>
             </footer>
+            <span style={{display: isFormSending}} ></span>
           </form>
         ) : (
           <section className="thanks">

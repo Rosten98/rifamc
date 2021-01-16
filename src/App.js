@@ -6,8 +6,8 @@ import {
   Route
 } from "react-router-dom";
 import Admin from "./components/Admin";
-import Aviso from "./components/Aviso";
-// import Form from "./components/Form";
+// import Aviso from "./components/Aviso";
+import Form from "./components/Form";
 
 const App = () => {
   return (
@@ -17,8 +17,8 @@ const App = () => {
           <Admin/>
         </Route>
         <Route path="/">
-          {/* <Form /> */}
-          <Aviso/>
+          <Form />
+          {/* <Aviso/> */}
         </Route>
       </Switch>
     </Router>
