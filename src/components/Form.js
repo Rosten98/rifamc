@@ -604,7 +604,7 @@ const Form = () => {
             <footer>
               <br />
               {alertMessage !== "" && <Alert alertMessage={alertMessage} />}
-              <button type="submit" disabled={true}>
+              <button type="submit" disabled={isFormSending}>
                 <span>Enviar</span>
                 <i className="fas fa-paper-plane"></i>
               </button>
