@@ -306,7 +306,7 @@ const Form = () => {
     db.collection("numbers")
       .where("selected", "==", false)
       .orderBy("number", "asc")
-      .limit(250)
+      .limit(50)
       .get()
       .then((querySnapshot) => {
         let docs = [];
