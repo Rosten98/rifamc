@@ -224,7 +224,7 @@ const Admin = () => {
                   <th>Correo</th>
                   <th>Grupo</th>
                   <th>Tipo de pago</th>
-                  <th>Folio de venta</th>
+                  <th>Folio de ticket</th>
                   <th>Pago</th>
                   <th>Números elegidos</th>
                   <th>Comprobante de pago</th>

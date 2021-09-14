@@ -537,7 +537,7 @@ const Form = () => {
                     <br />
                   </label>
                   <label>
-                    Folio de venta
+                    Folio de ticket o Referencia
                     <br />
                     <input
                       placeholder="101010101010"
@@ -631,8 +631,8 @@ const Form = () => {
             </div>
             <div className="downloadImg">
                 <button type="button" onClick={() => document.getElementById('download').click()}>Descargar imagen</button>
-                <a href={require("../assets/merry_xmas.jpg")} id="download" download="Feliz_navidad">
-                  <img src={require("../assets/merry_xmas.jpg")} alt="Imagen de agradecimiento" width="100%"/>
+                <a href={require("../assets/merry_xmas.jpeg")} id="download" download="Feliz_navidad">
+                  <img src={require("../assets/merry_xmas.jpeg")} alt="Imagen de agradecimiento" width="100%"/>
                 </a>
             </div>
           </section>

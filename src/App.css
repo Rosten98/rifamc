@@ -71,7 +71,8 @@ tr:nth-child(even){background-color: #f2f2f2}
   left: 0;
   width: 100%;
   height: 400px;
-  background-image: url('./assets/bg-nav.jpeg');
+  background-image: url('./assets/bg-nav.jpg');
+  background-size: cover;
 }
 
 .page::after {
