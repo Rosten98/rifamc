@@ -576,27 +576,39 @@ const Form = () => {
                   </p>
                   <label>Lista de números disponibles</label>
                   <div className="numberList">
-                    <ul>
+                    <ol>
                       {numbers.length > 0 &&
                         numbers.map((item, i) => {
                           return (
                             <li key={i}>
-                              <input
-                                type="checkbox"
-                                onChange={(e) => handleCheckboxes(e)}
-                                value={item.number}
-                              />
-                              <span>{item.number}</span>
+                              <label className="checkbox-container">
+                                {item.number}
+                                <input
+                                  type="checkbox"
+                                  onChange={(e) => handleCheckboxes(e)}
+                                  value={item.number}
+                                  />
+                              </label>
                             </li>
                           );
                         })}
-                    </ul>
+                    </ol>
                   </div>
                   <label>
                     {selectedNumbers.length === 0 && (
                       <Alert alertMessage="Campo obligatorio" />
                     )}
                   </label>
+                  <div>
+                    {selectedNumbers.length > 0 ?
+                    <>
+                      <span className="label">Numeros seleccionados:</span>
+                      <ul>
+                          {selectedNumbers.map((item, i) => <li key={i}>{item}</li>)}
+                      </ul>
+                    </>
+                    : null}
+                  </div>
                   <br />
                 </div>
               </div>

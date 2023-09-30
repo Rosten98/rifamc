@@ -143,28 +143,63 @@ main section {
   height: 160px;
   background-color: white;
   box-shadow: 0px 0px 5px 0px rgba(36, 36, 36, .1);
-  border-radius: 5px;
+  /* border-radius: 5px; */
+}
+
+.numberList ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.numberList li {
+  background-color: rgb(227, 238, 255);
+  border: 1px solid rgb(213, 223, 255);
+  border-bottom: 0px;
+}
+
+.numberList input{
+  width: 100%;
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-container {
+  display: block;
+  font-size: 1em;
+  cursor: pointer;
+  width: 100%;
+  padding: 2px 12px;
+  color: rgb(49, 60, 94);
+}
+
+.checkbox-container:hover {
+  background-color: rgb(182, 209, 250);
+}
+
+input[type="checkbox"]:checked {
+  background-color: red;
+  opacity: 1;
+  position: initial;
+  height: 100%;;
 }
 
 ul {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
   margin: 0;
   padding: 0;
   position: relative;
   text-align: center;
   list-style-type: none;
+  color: #676666;
+  font-size: .9em;
 }
 
-li {
-  position: relative;
-  top: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-label {
+label, .label {
   font-size: .8em;
   font-weight: bold;
   color: rgb(99, 99, 99);

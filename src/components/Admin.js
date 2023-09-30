@@ -132,7 +132,7 @@ const Admin = () => {
         setParticipantsComp(
           docs.map((participant) => {
             const numbersComp = participant.selectedNumbers.map((number) => (
-              <li key={number}>{number + "||"}</li>
+              <li key={number}>{number + ", "}</li>
             ));
             return (
               <tr key={participant.date}>
